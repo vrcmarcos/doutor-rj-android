@@ -1,5 +1,6 @@
 package com.overdrain.doutorrj;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +14,17 @@ import com.overdrain.doutorrj.view.navigation.Navigation;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static MainActivity INSTANCE;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+
+    public MainActivity() {
+        super();
+        INSTANCE = this;
+    }
+
+    public static Activity getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        new Navigation(this, savedInstanceState, toolbar);
-
+        new Navigation(savedInstanceState, toolbar);
 
         setUpMapIfNeeded();
     }

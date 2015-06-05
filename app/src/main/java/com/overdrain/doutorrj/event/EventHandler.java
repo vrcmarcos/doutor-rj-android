@@ -1,5 +1,9 @@
 package com.overdrain.doutorrj.event;
 
+import android.app.Activity;
+
+import com.overdrain.doutorrj.MainActivity;
+
 /**
  * Created by mcardoso on 6/4/15.
  */

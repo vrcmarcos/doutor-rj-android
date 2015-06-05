@@ -7,5 +7,5 @@ import com.overdrain.doutorrj.event.Event;
  */
 public enum NavigationEvent implements Event {
 
-    FACEBOOK_LOGIN;
+    ABOUT_US;
 }

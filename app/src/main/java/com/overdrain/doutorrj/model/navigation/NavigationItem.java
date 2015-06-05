@@ -7,7 +7,7 @@ import com.overdrain.doutorrj.event.navigation.NavigationEvent;
  */
 public enum NavigationItem {
 
-    FACEBOOK_LOGIN(1, NavigationEvent.FACEBOOK_LOGIN);
+    ABOUT_US(1, NavigationEvent.ABOUT_US);
 
     private int id;
     private NavigationEvent event;

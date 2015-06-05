@@ -1,6 +1,5 @@
 package com.overdrain.doutorrj.view.navigation;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -15,13 +14,13 @@ import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
+import com.overdrain.doutorrj.MainActivity;
 import com.overdrain.doutorrj.R;
 import com.overdrain.doutorrj.event.EventManager;
 import com.overdrain.doutorrj.event.navigation.NavigationEvent;
-import com.overdrain.doutorrj.event.navigation.handler.FacebookLoginHandler;
+import com.overdrain.doutorrj.event.navigation.handler.AboutUsHandler;
 import com.overdrain.doutorrj.model.navigation.NavigationItem;
 import com.squareup.picasso.Picasso;
 
@@ -30,35 +29,25 @@ import com.squareup.picasso.Picasso;
  */
 public class Navigation {
 
-    public Navigation(Activity activity, Bundle savedInstanceState, Toolbar toolbar) {
+    public Navigation(Bundle savedInstanceState, Toolbar toolbar) {
         createImageLoader();
         createEventHandlers();
 
-//        //Navigation Drawer Setup
-//        final IProfile profile = new ProfileDrawerItem()
-//                .withName("Marcos Cardoso")
-//                .withEmail("vrcmarcos@gmail.com")
-//                .withIcon(Uri.parse("https://graph.facebook.com/vrcmarcos/picture?width=9999"));
-
         AccountHeader headerResult = new AccountHeaderBuilder()
-                .withActivity(activity)
+                .withActivity(MainActivity.getInstance())
                 .withHeaderBackground(R.drawable.header)
                 .withSavedInstance(savedInstanceState)
                 .build();
 
-        Drawer result = new DrawerBuilder()
-                .withActivity(activity)
+        new DrawerBuilder()
+                .withActivity(MainActivity.getInstance())
                 .withToolbar(toolbar)
                 .withSavedInstance(savedInstanceState)
                 .withShowDrawerOnFirstLaunch(true)
                 .withAccountHeader(headerResult)
-                .addDrawerItems(
-                        new ProfileSettingDrawerItem().withName("ProSett")
-                )
                 .addStickyDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.nav_fb_login)
-                                .withIdentifier(NavigationItem.FACEBOOK_LOGIN.getId())
-                                .withIcon(R.drawable.nav_ico_fb)
+                        new PrimaryDrawerItem().withName(R.string.nav_about_us)
+                                .withIdentifier(NavigationItem.ABOUT_US.getId())
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
 
@@ -74,7 +63,7 @@ public class Navigation {
     }
 
     private void createEventHandlers() {
-        new FacebookLoginHandler(NavigationEvent.FACEBOOK_LOGIN);
+        new AboutUsHandler(NavigationEvent.ABOUT_US);
     }
 
     private void createImageLoader() {
