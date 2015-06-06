@@ -7,5 +7,5 @@ import com.overdrain.doutorrj.event.Event;
  */
 public enum NavigationEvent implements Event {
 
-    ABOUT_US;
+    MAP, ABOUT_US;
 }

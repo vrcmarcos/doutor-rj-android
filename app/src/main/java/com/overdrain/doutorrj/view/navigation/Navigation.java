@@ -21,6 +21,7 @@ import com.overdrain.doutorrj.R;
 import com.overdrain.doutorrj.event.EventManager;
 import com.overdrain.doutorrj.event.navigation.NavigationEvent;
 import com.overdrain.doutorrj.event.navigation.handler.AboutUsHandler;
+import com.overdrain.doutorrj.event.navigation.handler.MapHandler;
 import com.overdrain.doutorrj.model.navigation.NavigationItem;
 import com.squareup.picasso.Picasso;
 
@@ -45,6 +46,10 @@ public class Navigation {
                 .withSavedInstance(savedInstanceState)
                 .withShowDrawerOnFirstLaunch(true)
                 .withAccountHeader(headerResult)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName(R.string.nav_map)
+                                .withIdentifier(NavigationItem.MAP.getId())
+                )
                 .addStickyDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.nav_about_us)
                                 .withIdentifier(NavigationItem.ABOUT_US.getId())
@@ -64,6 +69,7 @@ public class Navigation {
 
     private void createEventHandlers() {
         new AboutUsHandler(NavigationEvent.ABOUT_US);
+        new MapHandler(NavigationEvent.MAP);
     }
 
     private void createImageLoader() {

@@ -7,7 +7,8 @@ import com.overdrain.doutorrj.event.navigation.NavigationEvent;
  */
 public enum NavigationItem {
 
-    ABOUT_US(1, NavigationEvent.ABOUT_US);
+    MAP(1, NavigationEvent.MAP),
+    ABOUT_US(2, NavigationEvent.ABOUT_US);
 
     private int id;
     private NavigationEvent event;
