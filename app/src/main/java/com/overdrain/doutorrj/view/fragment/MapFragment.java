@@ -1,6 +1,5 @@
 package com.overdrain.doutorrj.view.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,11 +16,28 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.overdrain.doutorrj.MainActivity;
 import com.overdrain.doutorrj.R;
+import com.overdrain.doutorrj.database.StorageManager;
+import com.overdrain.doutorrj.model.rest.Establishment;
+import com.overdrain.doutorrj.utils.GPSTracker;
+
+import java.util.List;
 
 public class MapFragment extends Fragment {
 
+    private enum DataKey {
+        ZOOM
+    }
+
+    private static String TAG = "MapFragment";
+
+    private static Float DEFAULT_ZOOM = 9f;
+
     private static MapView mapView;
     private static GoogleMap googleMap;
+
+    public MapFragment() {
+        super();
+    }
 
     @Nullable
     @Override
@@ -35,30 +51,27 @@ public class MapFragment extends Fragment {
         MapsInitializer.initialize(MainActivity.getInstance().getApplicationContext());
 
         this.googleMap = this.mapView.getMap();
-        double latitude = 17.385044;
-        double longitude = 78.486671;
-        MarkerOptions marker = new MarkerOptions().position(
-                new LatLng(latitude, longitude)).title("Hello Maps");
-
-        this.googleMap.addMarker(marker);
-
-        try {
-            float zoom = savedInstanceState.getFloat("ZOOM");
-            if (zoom != 0) {
-                this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom));
-            }
-        } catch ( NullPointerException e ) {
-            Log.i("hehe", "ozom nao encontrado");
-        }
+        float zoom = StorageManager.getInstance().getFloat(DataKey.ZOOM.toString(), DEFAULT_ZOOM);
+        this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(GPSTracker.getInstance().getLatLng(), zoom));
 
         return view;
     }
 
-
-
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putFloat("ZOOM", this.googleMap.getCameraPosition().zoom);
-        super.onSaveInstanceState(outState);
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "Zoom: " + this.googleMap.getCameraPosition().zoom);
+        StorageManager.getInstance().setFloat(DataKey.ZOOM.toString(), this.googleMap.getCameraPosition().zoom);
+    }
+
+    public static void updateMap(List<Establishment> establishments) {
+
+        for( Establishment establishment : establishments) {
+
+            double latitude = Double.parseDouble(establishment.getLatitude());
+            double longitude = Double.parseDouble(establishment.getLongitude());
+            MarkerOptions marker = new MarkerOptions().position(new LatLng(latitude, longitude)).title(establishment.getName());
+            googleMap.addMarker(marker);
+        }
     }
 }

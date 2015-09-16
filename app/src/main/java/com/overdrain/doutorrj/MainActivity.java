@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
-import com.google.android.gms.maps.GoogleMap;
+import com.mashape.unirest.http.Unirest;
+import com.overdrain.doutorrj.utils.RestRequest;
 import com.overdrain.doutorrj.view.fragment.MapFragment;
 import com.overdrain.doutorrj.view.navigation.Navigation;
 
@@ -13,7 +15,6 @@ import com.overdrain.doutorrj.view.navigation.Navigation;
 public class MainActivity extends AppCompatActivity {
 
     private static MainActivity INSTANCE;
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
     public MainActivity() {
         super();
@@ -37,24 +38,9 @@ public class MainActivity extends AppCompatActivity {
         transaction.add(R.id.frame_container, new MapFragment());
         transaction.commit();
 
-//        setUpMapIfNeeded();
-    }
+        new RestRequest().execute();
 
-//    private void setUpMapIfNeeded() {
-//        // Do a null check to confirm that we have not already instantiated the map.
-//        if (mMap == null) {
-//            // Try to obtain the map from the SupportMapFragment.
-//            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-//                    .getMap();
-//            // Check if we were successful in obtaining the map.
-//            if (mMap != null) {
-//                setUpMap();
-//            }
-//        }
-//    }
-//    private void setUpMap() {
-//        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-//    }
+    }
 
 
 }
