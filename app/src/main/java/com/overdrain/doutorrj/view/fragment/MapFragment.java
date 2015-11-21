@@ -14,15 +14,19 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 import com.overdrain.doutorrj.MainActivity;
 import com.overdrain.doutorrj.R;
 import com.overdrain.doutorrj.database.StorageManager;
+import com.overdrain.doutorrj.model.navigation.MapPointItem;
 import com.overdrain.doutorrj.model.rest.Establishment;
 import com.overdrain.doutorrj.utils.GPSTracker;
 
 import java.util.List;
 
 public class MapFragment extends Fragment {
+
+    private static ClusterManager<MapPointItem> clusterManager;
 
     private enum DataKey {
         ZOOM
@@ -54,6 +58,11 @@ public class MapFragment extends Fragment {
         float zoom = StorageManager.getInstance().getFloat(DataKey.ZOOM.toString(), DEFAULT_ZOOM);
         this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(GPSTracker.getInstance().getLatLng(), zoom));
 
+        this.clusterManager = new ClusterManager<MapPointItem>(this.mapView.getContext(), this.googleMap);
+
+        this.googleMap.setOnCameraChangeListener(this.clusterManager);
+        this.googleMap.setOnMarkerClickListener(this.clusterManager);
+
         return view;
     }
 
@@ -70,8 +79,7 @@ public class MapFragment extends Fragment {
 
             double latitude = Double.parseDouble(establishment.getLatitude());
             double longitude = Double.parseDouble(establishment.getLongitude());
-            MarkerOptions marker = new MarkerOptions().position(new LatLng(latitude, longitude)).title(establishment.getName());
-            googleMap.addMarker(marker);
+            clusterManager.addItem(new MapPointItem(latitude, longitude));
         }
     }
 }
