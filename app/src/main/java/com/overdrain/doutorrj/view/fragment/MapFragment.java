@@ -12,12 +12,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.overdrain.doutorrj.MainActivity;
 import com.overdrain.doutorrj.R;
-import com.overdrain.doutorrj.database.StorageManager;
 import com.overdrain.doutorrj.model.navigation.MapPointItem;
 import com.overdrain.doutorrj.model.rest.Establishment;
 import com.overdrain.doutorrj.utils.GPSTracker;
@@ -26,18 +23,11 @@ import java.util.List;
 
 public class MapFragment extends Fragment {
 
-    private static ClusterManager<MapPointItem> clusterManager;
-
-    private enum DataKey {
-        ZOOM
-    }
-
     private static String TAG = "MapFragment";
-
-    private static Float DEFAULT_ZOOM = 9f;
-
-    private static MapView mapView;
-    private static GoogleMap googleMap;
+    private static ClusterManager<MapPointItem> CLUSTER_MANAGER;
+    private static Float DEFAULT_ZOOM = 11f;
+    private static MapView MAP_VIEW;
+    private static GoogleMap GOOGLE_MAP;
 
     public MapFragment() {
         super();
@@ -47,21 +37,19 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-
-        this.mapView = (MapView) view.findViewById(R.id.mapView);
-        this.mapView.onCreate(savedInstanceState);
-        this.mapView.onResume();
-
         MapsInitializer.initialize(MainActivity.getInstance().getApplicationContext());
 
-        this.googleMap = this.mapView.getMap();
-        float zoom = StorageManager.getInstance().getFloat(DataKey.ZOOM.toString(), DEFAULT_ZOOM);
-        this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(GPSTracker.getInstance().getLatLng(), zoom));
+        MAP_VIEW = (MapView) view.findViewById(R.id.mapView);
+        MAP_VIEW.onCreate(savedInstanceState);
+        MAP_VIEW.onResume();
 
-        this.clusterManager = new ClusterManager<MapPointItem>(this.mapView.getContext(), this.googleMap);
+        GOOGLE_MAP = MAP_VIEW.getMap();
+        GOOGLE_MAP.animateCamera(CameraUpdateFactory.newLatLngZoom(GPSTracker.getInstance().getLatLng(), DEFAULT_ZOOM));
 
-        this.googleMap.setOnCameraChangeListener(this.clusterManager);
-        this.googleMap.setOnMarkerClickListener(this.clusterManager);
+        CLUSTER_MANAGER = new ClusterManager<MapPointItem>(MAP_VIEW.getContext(), GOOGLE_MAP);
+
+        GOOGLE_MAP.setOnCameraChangeListener(CLUSTER_MANAGER);
+        GOOGLE_MAP.setOnMarkerClickListener(CLUSTER_MANAGER);
 
         return view;
     }
@@ -69,8 +57,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "Zoom: " + this.googleMap.getCameraPosition().zoom);
-        StorageManager.getInstance().setFloat(DataKey.ZOOM.toString(), this.googleMap.getCameraPosition().zoom);
+        Log.d(TAG, "Zoom: " + GOOGLE_MAP.getCameraPosition().zoom);
     }
 
     public static void updateMap(List<Establishment> establishments) {
@@ -79,7 +66,7 @@ public class MapFragment extends Fragment {
 
             double latitude = Double.parseDouble(establishment.getLatitude());
             double longitude = Double.parseDouble(establishment.getLongitude());
-            clusterManager.addItem(new MapPointItem(latitude, longitude));
+            CLUSTER_MANAGER.addItem(new MapPointItem(latitude, longitude));
         }
     }
 }

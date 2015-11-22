@@ -6,6 +6,14 @@
     <string name="nav_map">Mapa</string>
     <string name="nav_about_us">Sobre</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Location -->
+    <string name="default_city_latitude">-22.8845</string>
+    <string name="default_city_longitude">-43.2505</string>
+
+    <!-- API -->
+    <string name="api_base_url">http://192.168.25.14:8000/</string>
+    <string name="api_establishments">estabelecimentos.json</string>
 </resources>

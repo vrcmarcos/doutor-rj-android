@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.overdrain.doutorrj.MainActivity;
+import com.overdrain.doutorrj.R;
 
 /**
  * Created by mcardoso on 6/11/15.
@@ -132,7 +133,9 @@ public class GPSTracker extends Service implements LocationListener {
      * Function to get latitude
      * */
     private double getLatitude(){
-        if(location != null){
+        if(location == null) {
+            latitude = Double.parseDouble(this.mContext.getString(R.string.default_city_latitude));
+        } else {
             latitude = location.getLatitude();
         }
 
@@ -145,7 +148,9 @@ public class GPSTracker extends Service implements LocationListener {
      * Function to get longitude
      * */
     private double getLongitude(){
-        if(location != null){
+        if(location == null) {
+            longitude = Double.parseDouble(this.mContext.getString(R.string.default_city_longitude));
+        } else {
             longitude = location.getLongitude();
         }
 
