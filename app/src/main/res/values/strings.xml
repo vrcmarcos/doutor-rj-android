@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Doutor RJ</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- URL -->
+    <string name="api_base_url">http://192.168.25.14:8000</string>
+    <string name="api_all_establishments">/estabelecimentos.json</string>
+</resources>
