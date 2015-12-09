@@ -1,7 +1,9 @@
 package com.mcardoso.doutorrj;
 
+import android.app.LocalActivityManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -10,11 +12,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TabHost;
 
 import com.mcardoso.doutorrj.controller.EstablishmentsController;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private LocalActivityManager localActivityManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,23 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        this.localActivityManager = new LocalActivityManager(this, false);
+        localActivityManager.dispatchCreate(savedInstanceState);
+        TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
+        tabHost.setup(localActivityManager);
+        TabHost.TabSpec descritor = tabHost.newTabSpec("tag1");
+        descritor.setContent(R.id.favorite);
+        descritor.setIndicator(getResources().getString(R.string.favorite_title));
+        tabHost.addTab(descritor);
+
+        descritor = tabHost.newTabSpec("tag2");
+        descritor.setContent(R.id.list);
+        descritor.setIndicator(getResources().getString(R.string.list_title));
+        tabHost.addTab(descritor);
+
+        tabHost.setCurrentTab(0);
+
 
         new EstablishmentsController(this, (ListView) findViewById(R.id.listView));
     }
@@ -90,5 +112,17 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.localActivityManager.dispatchResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.localActivityManager.dispatchPause(isFinishing());
     }
 }

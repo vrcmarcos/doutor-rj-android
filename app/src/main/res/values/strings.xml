@@ -6,6 +6,9 @@
 
     <string name="action_settings">Settings</string>
 
+    <string name="favorite_title">Melhor escolha</string>
+    <string name="list_title">Todas as opções</string>
+
     <!-- URL -->
     <string name="api_base_url">http://192.168.25.14:8000</string>
     <string name="api_all_establishments">/estabelecimentos.json</string>
