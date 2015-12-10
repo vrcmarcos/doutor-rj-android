@@ -5,12 +5,10 @@ import android.content.res.Resources;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.mcardoso.doutorrj.MainActivity;
 import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.model.Establishment;
 import com.mcardoso.doutorrj.model.EstablishmentsList;
 import com.mcardoso.doutorrj.util.RestRequest;
-import com.mcardoso.doutorrj.view.list.CustomAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +36,7 @@ public class EstablishmentsController {
 
     public void setEstablishmentsList(EstablishmentsList establishmentsList) {
         this.establishmentsList = establishmentsList;
-        CustomAdapter adapter = new CustomAdapter(this.ctx, this.establishmentsList.getResults());
+//        CustomAdapter adapter = new CustomAdapter(this.ctx, this.establishmentsList.getResults());
         List<String> data = new ArrayList<String>();
         for (Establishment establishment:this.establishmentsList.getResults()) {
             data.add(establishment.getName());

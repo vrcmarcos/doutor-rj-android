@@ -1,31 +1,30 @@
 package com.mcardoso.doutorrj;
 
-import android.app.LocalActivityManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
-import android.widget.TabHost;
 
-import com.mcardoso.doutorrj.controller.EstablishmentsController;
+import com.mcardoso.doutorrj.view.CustomPageAdapter;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ActionBar.TabListener {
 
-    private LocalActivityManager localActivityManager;
+    private CustomPageAdapter pageAdapter;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -37,25 +36,41 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        this.localActivityManager = new LocalActivityManager(this, false);
-        localActivityManager.dispatchCreate(savedInstanceState);
-        TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
-        tabHost.setup(localActivityManager);
-        TabHost.TabSpec descritor = tabHost.newTabSpec("tag1");
-        descritor.setContent(R.id.favorite);
-        descritor.setIndicator(getResources().getString(R.string.favorite_title));
-        tabHost.addTab(descritor);
+        this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//        actionBar.setHomeButtonEnabled(false);
+//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        descritor = tabHost.newTabSpec("tag2");
-        descritor.setContent(R.id.list);
-        descritor.setIndicator(getResources().getString(R.string.list_title));
-        tabHost.addTab(descritor);
+        this.viewPager = (ViewPager) findViewById(R.id.pager);
+        this.viewPager.setAdapter(this.pageAdapter);
+        this.viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                actionBar.setSelectedNavigationItem(position);
+            }
+        });
 
-        tabHost.setCurrentTab(0);
+        // For each of the sections in the app, add a tab to the action bar.
+        for (int i = 0; i < this.pageAdapter.getCount(); i++) {
+            // Create a tab with text corresponding to the page title defined by the adapter.
+            // Also specify this Activity object, which implements the TabListener interface, as the
+            // listener for when this tab is selected.
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setText(this.pageAdapter.getPageTitle(i))
+                            .setTabListener(this));
+//            actionBar.addTab(
+//                    actionBar.newTab()
+//                            .setText(this.pageAdapter.getPageTitle(i))
+//                            .setTabListener(this));
+        }
 
-
-        new EstablishmentsController(this, (ListView) findViewById(R.id.listView));
+//        new EstablishmentsController(this, (ListView) findViewById(R.id.listView));
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -115,14 +130,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        this.localActivityManager.dispatchResume();
+    public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction ft) {
+        this.viewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        this.localActivityManager.dispatchPause(isFinishing());
+    public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction ft) {
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction ft) {
+
     }
 }
