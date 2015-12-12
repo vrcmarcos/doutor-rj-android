@@ -8,7 +8,4 @@
 
     <string name="favorite_title">Melhor escolha</string>
     <string name="list_title">Todas as opções</string>
-
-    <!-- URL -->
-    <string name="api_all_establishments">http://192.168.25.14:8000/estabelecimentos.json</string>
 </resources>
