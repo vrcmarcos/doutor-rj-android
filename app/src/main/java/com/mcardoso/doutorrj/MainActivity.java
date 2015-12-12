@@ -2,6 +2,7 @@ package com.mcardoso.doutorrj;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -37,35 +38,32 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-//        actionBar.setHomeButtonEnabled(false);
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
         this.viewPager = (ViewPager) findViewById(R.id.pager);
         this.viewPager.setAdapter(this.pageAdapter);
-        this.viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
-            }
-        });
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(this.viewPager);
+//        this.viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+//            @Override
+//            public void onPageSelected(int position) {
+//                actionBar.setSelectedNavigationItem(position);
+//            }
+//        });
 
         // For each of the sections in the app, add a tab to the action bar.
-        for (int i = 0; i < this.pageAdapter.getCount(); i++) {
-            // Create a tab with text corresponding to the page title defined by the adapter.
-            // Also specify this Activity object, which implements the TabListener interface, as the
-            // listener for when this tab is selected.
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText(this.pageAdapter.getPageTitle(i))
-                            .setTabListener(this));
+//        for (int i = 0; i < this.pageAdapter.getCount(); i++) {
+//             Create a tab with text corresponding to the page title defined by the adapter.
+//             Also specify this Activity object, which implements the TabListener interface, as the
+//             listener for when this tab is selected.
 //            actionBar.addTab(
 //                    actionBar.newTab()
 //                            .setText(this.pageAdapter.getPageTitle(i))
 //                            .setTabListener(this));
-        }
+//            actionBar.addTab(
+//                    actionBar.newTab()
+//                            .setText(this.pageAdapter.getPageTitle(i))
+//                            .setTabListener(this));
+//        }
 
 //        new EstablishmentsController(this, (ListView) findViewById(R.id.listView));
     }
