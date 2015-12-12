@@ -10,6 +10,5 @@
     <string name="list_title">Todas as opções</string>
 
     <!-- URL -->
-    <string name="api_base_url">http://192.168.25.14:8000</string>
-    <string name="api_all_establishments">/estabelecimentos.json</string>
+    <string name="api_all_establishments">http://192.168.25.14:8000/estabelecimentos.json</string>
 </resources>

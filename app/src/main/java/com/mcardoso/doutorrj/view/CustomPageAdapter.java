@@ -15,14 +15,14 @@ public class CustomPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = null;
+        Fragment fragment;
 
         switch(position) {
             case 1:
-                fragment = new FavoriteFragment();
+                fragment = new ListFragment();
                 break;
             default:
-                fragment = new ListFragment();
+                fragment = new FavoriteFragment();
                 break;
         }
 
