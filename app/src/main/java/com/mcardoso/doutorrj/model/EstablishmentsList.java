@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by mcardoso on 9/15/15.
  */
-public class EstablishmentsList {
+public class EstablishmentsList extends StorageModel {
 
     Integer count;
     String next;
@@ -43,4 +43,5 @@ public class EstablishmentsList {
     public void setResults(List<Establishment> results) {
         this.results = results;
     }
+
 }

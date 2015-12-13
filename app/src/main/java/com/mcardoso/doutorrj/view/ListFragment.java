@@ -1,6 +1,5 @@
 package com.mcardoso.doutorrj.view;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,11 +11,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.mashape.unirest.http.Unirest;
+import com.mcardoso.doutorrj.MainActivity;
 import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.model.Establishment;
-import com.mcardoso.doutorrj.model.EstablishmentsList;
 
 import java.util.List;
 
@@ -26,55 +23,28 @@ import java.util.List;
 public class ListFragment extends Fragment {
 
     private static String TAG = "ListFragment";
-    private Bundle savedInstanceState;
     private View view;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        new RetrieveEstablishmentsTask().execute();
         Log.d(TAG, "Testing3");
-        this.savedInstanceState = savedInstanceState;
         this.view = inflater.inflate(R.layout.fragment_list, container, false);
-        return this.view;
-    }
-
-    private void updateList(EstablishmentsList establishmentList) {
         ListView listView = (ListView) this.view.findViewById(R.id.listView);
-        listView.setAdapter(new CustomListAdapter(establishmentList.getResults()));
-    }
-
-    class RetrieveEstablishmentsTask extends AsyncTask<String, Void, EstablishmentsList> {
-
-        private EstablishmentsList list;
-
-        @Override
-        protected EstablishmentsList doInBackground(String... params) {
-            Log.d(TAG, "Testing");
-            String url = getResources().getString(R.string.api_all_establishments);
-            try {
-                String result = Unirest.get(url).asString().getBody();
-                this.list = new Gson().fromJson(result, EstablishmentsList.class);
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
-            }
-            Log.d(TAG, "Testing2");
-
-            return this.list;
-        }
-
-        @Override
-        protected void onPostExecute(EstablishmentsList establishmentsList) {
-            updateList(this.list);
-        }
+        listView.setAdapter(
+                new CustomListAdapter(savedInstanceState, MainActivity.ESTABLISHMENTS.getResults())
+        );
+        return this.view;
     }
 
     class CustomListAdapter extends BaseAdapter {
 
         private List<Establishment> establishments;
+        private Bundle savedInstanceState;
 
-        public CustomListAdapter(List<Establishment> establishments) {
+        public CustomListAdapter(Bundle savedInstanceState, List<Establishment> establishments) {
             super();
+            this.savedInstanceState = savedInstanceState;
             this.establishments = establishments;
         }
 
@@ -96,7 +66,7 @@ public class ListFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                LayoutInflater inflater = getLayoutInflater(savedInstanceState);
+                LayoutInflater inflater = getLayoutInflater(this.savedInstanceState);
                 convertView = inflater.inflate(R.layout.list_row, null);
             }
 
