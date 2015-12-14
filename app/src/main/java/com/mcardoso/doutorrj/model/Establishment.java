@@ -39,6 +39,9 @@ public class Establishment {
 
     String email;
 
+    @SerializedName("esfera_administrativa")
+    String kind;
+
     String latitude;
 
     String longitude;
@@ -156,6 +159,14 @@ public class Establishment {
 
     public void setEstablishmentType(String establishmentType) {
         this.establishmentType = establishmentType;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 
     public Location getLocation() {

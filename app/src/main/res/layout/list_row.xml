@@ -1,19 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="none"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/row_title" />
+        android:text="Hospital Universitário Clementino Fraga Filho"
+        android:id="@+id/row_title"
+        android:capitalize="words"
+        android:maxLines="1"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp" />
 
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/row_distance" />
-</LinearLayout>
+        android:text="1.23km"
+        android:id="@+id/row_distance"
+        android:layout_below="@+id/row_title"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="10sp"
+        android:layout_marginRight="2dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Público"
+        android:id="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/row_distance"
+        android:layout_toStartOf="@+id/row_distance"
+        android:layout_alignBottom="@+id/row_distance"
+        android:layout_below="@+id/row_title"
+        android:textSize="10sp"
+        android:layout_marginLeft="2dp" />
+</RelativeLayout>

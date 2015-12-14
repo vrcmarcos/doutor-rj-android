@@ -89,15 +89,19 @@ public class ListFragment extends Fragment {
                 convertView = inflater.inflate(R.layout.list_row, null);
             }
 
-            TextView name = (TextView)convertView.findViewById(R.id.row_title);
-            TextView distance = (TextView)convertView.findViewById(R.id.row_distance);
-
             Establishment establishment = this.establishments.get(position);
+
+            ((TextView)convertView.findViewById(R.id.row_title)).setText(establishment.getName());
+
             Float distanceInMeters = LocationTracker.getInstance().getCurrentLocation().distanceTo(
                     establishment.getLocation());
-
-            name.setText(establishment.getName());
-            distance.setText(distanceInMeters+"m");
+            String formattedDistance;
+            if (distanceInMeters > 1000f) {
+                formattedDistance = String.format("%.2fkm", distanceInMeters/1000f);
+            } else {
+                formattedDistance = String.format("%.0fm", distanceInMeters);
+            }
+            ((TextView)convertView.findViewById(R.id.row_distance)).setText(formattedDistance);
 
             return convertView;
         }
