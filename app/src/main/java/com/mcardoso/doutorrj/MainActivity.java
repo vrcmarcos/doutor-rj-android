@@ -2,6 +2,7 @@ package com.mcardoso.doutorrj;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -17,22 +18,26 @@ import android.view.MenuItem;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.Unirest;
 import com.mcardoso.doutorrj.model.EstablishmentsList;
+import com.mcardoso.doutorrj.util.LocationTracker;
 import com.mcardoso.doutorrj.view.CustomPageAdapter;
-import com.mcardoso.doutorrj.view.ListFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static String TAG = "MainActivity";
+    private static int UPDATE_LIST_DELAY = 2 * 1000;
+    private static int MAX_RETRIES = 5;
 
     private CustomPageAdapter pageAdapter;
     private ViewPager viewPager;
+    private int requestRetries = 0;
 
     public static EstablishmentsList ESTABLISHMENTS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LocationTracker.getInstance().setup(this);
         setContentView(R.layout.activity_main);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,7 +67,6 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected EstablishmentsList doInBackground(String... params) {
             EstablishmentsList list = null;
-            Log.d(TAG, "Testing");
             String url = getResources().getString(R.string.api_all_establishments);
             try {
                 String result = Unirest.get(url).asString().getBody();
@@ -70,16 +74,34 @@ public class MainActivity extends AppCompatActivity
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
             }
-            Log.d(TAG, "Testing2");
 
             return list;
         }
 
         @Override
         protected void onPostExecute(EstablishmentsList establishmentsList) {
-            if ( establishmentsList != null ) {
-                establishmentsList.save(getApplicationContext());
-                ESTABLISHMENTS = establishmentsList;
+            onRequestFinish(establishmentsList);
+        }
+    }
+
+    private void onRequestFinish(EstablishmentsList establishmentsList) {
+        if ( establishmentsList != null ) {
+            establishmentsList.save(getApplicationContext());
+            ESTABLISHMENTS = establishmentsList;
+        } else {
+            requestRetries += 1;
+            if ( requestRetries <= MAX_RETRIES ) {
+                Log.d(TAG, "Trying to reach the servers...");
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        new RetrieveEstablishmentsTask().execute();
+                    }
+                }, UPDATE_LIST_DELAY);
+                new RetrieveEstablishmentsTask().execute();
+            } else {
+                Log.e(TAG, "Could NOT reach servers!");
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.mcardoso.doutorrj.view;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.mcardoso.doutorrj.MainActivity;
 import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.model.Establishment;
+import com.mcardoso.doutorrj.util.LocationTracker;
 
 import java.util.List;
 
@@ -23,18 +25,35 @@ import java.util.List;
 public class ListFragment extends Fragment {
 
     private static String TAG = "ListFragment";
+    private static int UPDATE_LIST_DELAY = 2 * 1000;
     private View view;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "Testing3");
         this.view = inflater.inflate(R.layout.fragment_list, container, false);
-        ListView listView = (ListView) this.view.findViewById(R.id.listView);
-        listView.setAdapter(
-                new CustomListAdapter(savedInstanceState, MainActivity.ESTABLISHMENTS.getResults())
-        );
+        this.populate(savedInstanceState);
         return this.view;
+    }
+
+    private void populate(final Bundle savedInstanceState) {
+        Log.d(TAG, "Tentando popular...");
+        if (MainActivity.ESTABLISHMENTS != null) {
+            ListView listView = (ListView) this.view.findViewById(R.id.listView);
+            listView.setAdapter(
+                    new CustomListAdapter(savedInstanceState, MainActivity.ESTABLISHMENTS.getResults())
+            );
+            this.view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        } else {
+            Log.d(TAG, "Agendando popular...");
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    populate(savedInstanceState);
+                }
+            }, UPDATE_LIST_DELAY);
+        }
     }
 
     class CustomListAdapter extends BaseAdapter {
@@ -71,10 +90,14 @@ public class ListFragment extends Fragment {
             }
 
             TextView name = (TextView)convertView.findViewById(R.id.row_title);
-            TextView summary = (TextView)convertView.findViewById(R.id.row_distance);
+            TextView distance = (TextView)convertView.findViewById(R.id.row_distance);
 
-            name.setText(this.establishments.get(position).getName());
-            summary.setText(this.establishments.get(position).getCnpj());
+            Establishment establishment = this.establishments.get(position);
+            Float distanceInMeters = LocationTracker.getInstance().getCurrentLocation().distanceTo(
+                    establishment.getLocation());
+
+            name.setText(establishment.getName());
+            distance.setText(distanceInMeters+"m");
 
             return convertView;
         }

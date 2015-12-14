@@ -1,5 +1,7 @@
 package com.mcardoso.doutorrj.model;
 
+import android.location.Location;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -154,5 +156,12 @@ public class Establishment {
 
     public void setEstablishmentType(String establishmentType) {
         this.establishmentType = establishmentType;
+    }
+
+    public Location getLocation() {
+        Location location = new Location("");
+        location.setLatitude(Double.parseDouble(getLatitude()));
+        location.setLongitude(Double.parseDouble(getLongitude()));
+        return location;
     }
 }
