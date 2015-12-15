@@ -2,6 +2,7 @@ package com.mcardoso.doutorrj.model;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -174,5 +175,9 @@ public class Establishment {
         location.setLatitude(Double.parseDouble(getLatitude()));
         location.setLongitude(Double.parseDouble(getLongitude()));
         return location;
+    }
+
+    public LatLng getLatLng() {
+        return new LatLng( Double.parseDouble(this.getLatitude()), Double.parseDouble(this.getLongitude()));
     }
 }

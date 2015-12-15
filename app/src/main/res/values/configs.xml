@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="api_key_v2">AIzaSyDCcPHpSobZDi-9xrWBr5mznH3pLZEf-Is</string>
     <string name="shared_preferences_key">7eZgezx8nANh2a3nB6sa5Duf</string>
 </resources>

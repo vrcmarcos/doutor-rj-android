@@ -13,6 +13,8 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by mcardoso on 12/13/15.
  */
@@ -153,6 +155,11 @@ public class LocationTracker extends Service implements LocationListener {
         return this.currentLocation;
     }
 
+    public LatLng getCurrentLatLng() {
+        Location currentLocation = this.getCurrentLocation();
+        return new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+    }
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -177,6 +184,28 @@ public class LocationTracker extends Service implements LocationListener {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    public static LatLng getMidPoint(LatLng position1, LatLng position2){
+
+        double lat1 = position1.latitude;
+        double lon1 = position1.longitude;
+        double lat2 = position2.latitude;
+        double lon2 = position2.longitude;
+
+        double dLon = Math.toRadians(lon2 - lon1);
+
+        //convert to radians
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+        lon1 = Math.toRadians(lon1);
+
+        double Bx = Math.cos(lat2) * Math.cos(dLon);
+        double By = Math.cos(lat2) * Math.sin(dLon);
+        double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));
+        double lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
+
+        return new LatLng(Math.toDegrees(lat3), Math.toDegrees(lon3));
     }
 
 }

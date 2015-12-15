@@ -8,4 +8,6 @@
 
     <string name="favorite_title">Melhor escolha</string>
     <string name="list_title">Todas as opções</string>
+
+    <string name="best_choice_map_title">Você</string>
 </resources>
