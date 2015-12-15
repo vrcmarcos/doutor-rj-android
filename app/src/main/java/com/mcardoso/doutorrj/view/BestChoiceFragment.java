@@ -33,7 +33,7 @@ public class BestChoiceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_best_choice, container, false);
-        this.mapView = (MapView) rootView.findViewById(R.id.mapview);
+        this.mapView = (MapView) rootView.findViewById(R.id.map_view);
         this.mapView.onCreate(savedInstanceState);
 
         this.map = this.mapView.getMap();
