@@ -22,9 +22,9 @@ import com.mcardoso.doutorrj.util.LocationTracker;
 /**
  * Created by mcardoso on 12/8/15.
  */
-public class FavoriteFragment extends Fragment {
+public class BestChoiceFragment extends Fragment {
 
-    private static String TAG = "FavoriteFragment";
+    private static String TAG = "BestChoiceFragment";
 
     MapView mapView;
     GoogleMap map;
@@ -32,7 +32,7 @@ public class FavoriteFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_favorite, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_best_choice, container, false);
         this.mapView = (MapView) rootView.findViewById(R.id.mapview);
         this.mapView.onCreate(savedInstanceState);
 

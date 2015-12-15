@@ -22,7 +22,7 @@ public class CustomPageAdapter extends FragmentPagerAdapter {
                 fragment = new ListFragment();
                 break;
             default:
-                fragment = new FavoriteFragment();
+                fragment = new BestChoiceFragment();
                 break;
         }
 
