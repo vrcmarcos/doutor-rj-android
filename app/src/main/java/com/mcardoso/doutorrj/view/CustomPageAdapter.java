@@ -1,16 +1,22 @@
 package com.mcardoso.doutorrj.view;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.mcardoso.doutorrj.R;
 
 /**
  * Created by mcardoso on 12/10/15.
  */
 public class CustomPageAdapter extends FragmentPagerAdapter {
 
-    public CustomPageAdapter(FragmentManager fm) {
+    private Context ctx;
+
+    public CustomPageAdapter(FragmentManager fm, Context ctx) {
         super(fm);
+        this.ctx = ctx;
     }
 
     @Override
@@ -36,6 +42,16 @@ public class CustomPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Section "+(position+1);
+        int resourceId;
+
+        switch (position) {
+            case 1:
+                resourceId = R.string.list_title;
+                break;
+            default:
+                resourceId = R.string.favorite_title;
+                break;
+        }
+        return ctx.getResources().getString(resourceId);
     }
 }

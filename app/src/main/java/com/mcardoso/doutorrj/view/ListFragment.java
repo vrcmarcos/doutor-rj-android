@@ -1,5 +1,6 @@
 package com.mcardoso.doutorrj.view;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -38,8 +39,9 @@ public class ListFragment extends Fragment {
 
     private void populate(final Bundle savedInstanceState) {
         Log.d(TAG, "Tentando popular...");
-        if (MainActivity.ESTABLISHMENTS != null) {
+        if (MainActivity.ESTABLISHMENTS != null && LocationTracker.getInstance().canGetLocation()) {
             ListView listView = (ListView) this.view.findViewById(R.id.listView);
+            MainActivity.ESTABLISHMENTS.sort(LocationTracker.getInstance().getCurrentLocation());
             listView.setAdapter(
                     new CustomListAdapter(savedInstanceState, MainActivity.ESTABLISHMENTS.getResults())
             );

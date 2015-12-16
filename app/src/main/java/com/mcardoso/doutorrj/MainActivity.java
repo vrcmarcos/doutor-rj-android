@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
+        this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager(), this);
         this.viewPager = (ViewPager) findViewById(R.id.pager);
         this.viewPager.setAdapter(this.pageAdapter);
 
@@ -85,10 +85,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void onRequestFinish(EstablishmentsList establishmentsList) {
-        if ( establishmentsList != null ) {
-            establishmentsList.save(getApplicationContext());
-            ESTABLISHMENTS = establishmentsList;
-        } else {
+        if (establishmentsList == null) {
             requestRetries += 1;
             if ( requestRetries <= MAX_RETRIES ) {
                 Log.d(TAG, "Trying to reach the servers...");
@@ -103,6 +100,9 @@ public class MainActivity extends AppCompatActivity
             } else {
                 Log.e(TAG, "Could NOT reach servers!");
             }
+        } else {
+            establishmentsList.save(getApplicationContext());
+            ESTABLISHMENTS = establishmentsList;
         }
     }
 
