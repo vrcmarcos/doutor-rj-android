@@ -49,7 +49,7 @@ public class CustomPageAdapter extends FragmentPagerAdapter {
                 resourceId = R.string.list_title;
                 break;
             default:
-                resourceId = R.string.favorite_title;
+                resourceId = R.string.best_choice_title;
                 break;
         }
         return ctx.getResources().getString(resourceId);

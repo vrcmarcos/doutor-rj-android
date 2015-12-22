@@ -1,10 +1,6 @@
 package com.mcardoso.doutorrj.view;
 
-import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,49 +9,33 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.mcardoso.doutorrj.MainActivity;
 import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.model.Establishment;
-import com.mcardoso.doutorrj.util.LocationTracker;
+import com.mcardoso.doutorrj.model.EstablishmentsList;
 
 import java.util.List;
 
 /**
  * Created by mcardoso on 12/10/15.
  */
-public class ListFragment extends Fragment {
+public class ListFragment extends NotifiableFragment {
 
     private static String TAG = "ListFragment";
-    private static int UPDATE_LIST_DELAY = 2 * 1000;
-    private View view;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.fragment_list, container, false);
-        this.populate(savedInstanceState);
-        return this.view;
+    protected Integer getTargetLayoutId() {
+        return R.layout.fragment_list;
     }
 
-    private void populate(final Bundle savedInstanceState) {
-        Log.d(TAG, "Tentando popular...");
-        if (MainActivity.ESTABLISHMENTS != null && LocationTracker.getInstance().canGetLocation()) {
-            ListView listView = (ListView) this.view.findViewById(R.id.listView);
-            MainActivity.ESTABLISHMENTS.sort(LocationTracker.getInstance().getCurrentLocation());
-            listView.setAdapter(
-                    new CustomListAdapter(savedInstanceState, MainActivity.ESTABLISHMENTS.getResults())
-            );
-            this.view.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-        } else {
-            Log.d(TAG, "Agendando popular...");
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    populate(savedInstanceState);
-                }
-            }, UPDATE_LIST_DELAY);
-        }
+    @Override
+    public void handleNotification(EstablishmentsList establishmentsList) {
+        Log.d(TAG, "Handling notification" + establishmentsList);
+        this.changeLayout();
+
+        ListView listView = (ListView) this.view.findViewById(R.id.listView);
+        listView.setAdapter(
+                new CustomListAdapter(savedInstanceState, establishmentsList.getResults())
+        );
     }
 
     class CustomListAdapter extends BaseAdapter {
@@ -95,8 +75,9 @@ public class ListFragment extends Fragment {
 
             ((TextView)convertView.findViewById(R.id.row_title)).setText(establishment.getName());
 
-            Float distanceInMeters = LocationTracker.getInstance().getCurrentLocation().distanceTo(
-                    establishment.getLocation());
+//            Float distanceInMeters = LocationTracker.getInstance().getLastKnowLocation().distanceTo(
+//                    establishment.getLocation());
+            Float distanceInMeters = 900f;
             String formattedDistance;
             if (distanceInMeters > 1000f) {
                 formattedDistance = String.format("%.2fkm", distanceInMeters/1000f);

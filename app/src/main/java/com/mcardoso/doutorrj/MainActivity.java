@@ -1,8 +1,6 @@
 package com.mcardoso.doutorrj;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -11,34 +9,32 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.gson.Gson;
-import com.mashape.unirest.http.Unirest;
 import com.mcardoso.doutorrj.model.EstablishmentsList;
 import com.mcardoso.doutorrj.util.LocationTracker;
+import com.mcardoso.doutorrj.util.RestRequest;
 import com.mcardoso.doutorrj.view.CustomPageAdapter;
+import com.mcardoso.doutorrj.view.NotifiableFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static String TAG = "MainActivity";
-    private static int UPDATE_LIST_DELAY = 2 * 1000;
-    private static int MAX_RETRIES = 5;
+    private static Gson GSON = new Gson();
 
     private CustomPageAdapter pageAdapter;
     private ViewPager viewPager;
-    private int requestRetries = 0;
-
-    public static EstablishmentsList ESTABLISHMENTS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LocationTracker.getInstance().setup(this);
         setContentView(R.layout.activity_main);
+
+        LocationTracker.getInstance().setContext(this);
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -58,52 +54,33 @@ public class MainActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(this.viewPager);
 
-        ESTABLISHMENTS = (EstablishmentsList) EstablishmentsList.load(this, EstablishmentsList.class);
-        new RetrieveEstablishmentsTask().execute();
+//        this.fetchUpdatedInfo();
     }
 
-    class RetrieveEstablishmentsTask extends AsyncTask<String, Void, EstablishmentsList> {
+    private void fetchUpdatedInfo() {
 
-        @Override
-        protected EstablishmentsList doInBackground(String... params) {
-            EstablishmentsList list = null;
-            String url = getResources().getString(R.string.api_all_establishments);
-            try {
-                String result = Unirest.get(url).asString().getBody();
-                list = new Gson().fromJson(result, EstablishmentsList.class);
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
-            }
+        String url = getResources().getString(R.string.api_all_establishments);
+        new RestRequest(url, RestRequest.Method.GET, new RestRequest.RestRequestCallback() {
+            @Override
+            public void onRequestSuccess(String json) {
 
-            return list;
-        }
+                final EstablishmentsList establishmentsList = GSON.fromJson(json, EstablishmentsList.class);
 
-        @Override
-        protected void onPostExecute(EstablishmentsList establishmentsList) {
-            onRequestFinish(establishmentsList);
-        }
-    }
-
-    private void onRequestFinish(EstablishmentsList establishmentsList) {
-        if (establishmentsList == null) {
-            requestRetries += 1;
-            if ( requestRetries <= MAX_RETRIES ) {
-                Log.d(TAG, "Trying to reach the servers...");
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        new RetrieveEstablishmentsTask().execute();
+                        for (NotifiableFragment view : NotifiableFragment.NOTIFIABLE_FRAGMENTS) {
+                            view.handleNotification(establishmentsList);
+                        }
                     }
-                }, UPDATE_LIST_DELAY);
-                new RetrieveEstablishmentsTask().execute();
-            } else {
-                Log.e(TAG, "Could NOT reach servers!");
+                });
             }
-        } else {
-            establishmentsList.save(getApplicationContext());
-            ESTABLISHMENTS = establishmentsList;
-        }
+
+            @Override
+            public void onRequestFail() {
+
+            }
+        }).execute();
     }
 
     @Override
@@ -161,5 +138,11 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocationTracker.getInstance().onResume();
     }
 }

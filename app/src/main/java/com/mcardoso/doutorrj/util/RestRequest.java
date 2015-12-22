@@ -4,57 +4,82 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.mashape.unirest.http.Unirest;
 
-import java.lang.reflect.Method;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by mcardoso on 12/7/15.
  */
-public class RestRequest<T> extends AsyncTask {
+public class RestRequest extends AsyncTask<String, Void, String> {
+
+    public enum Method {
+        GET("GET"), POST("POST");
+
+        public String value;
+
+        Method(String value) {
+            this.value = value;
+        }
+    }
 
     private static String TAG = "RestRequest";
+    private static int TIMEOUT_IN_MILLIS = 1000 * 30;
 
     private String url;
-    private Class<T> returnType;
-    private Object receiver;
-    private String callbackMethod;
+    private Method method;
+    private RestRequestCallback callback;
 
-    public RestRequest(String url, Class<T> returnType, Object receiver, String callbackMethod) {
+    public RestRequest(String url, Method method, RestRequestCallback callback) {
         this.url = url;
-        this.returnType = returnType;
-        this.receiver = receiver;
-        this.callbackMethod = callbackMethod;
+        this.method = method;
+        this.callback = callback;
     }
 
     @Override
-    protected Object doInBackground(Object[] params) {
-        Object result = null;
+    protected String doInBackground(String... params) {
+        HttpURLConnection conn = null;
         try {
-            result = Unirest.get(this.url).asString().getBody();
+            URL url = new URL(this.url);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod(this.method.value);
+            conn.setConnectTimeout(TIMEOUT_IN_MILLIS);
+            conn.setRequestProperty("Accept", "application/json");
+
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+
+            String output;
+            StringBuilder json = new StringBuilder();
+            while ((output = br.readLine()) != null) {
+                json.append(output);
+            }
+
+            conn.disconnect();
+            this.callback.onRequestSuccess(json.toString());
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
-        }
-        return result;
-    }
-
-    @Override
-    protected void onPostExecute(Object o) {
-        super.onPostExecute(o);
-        T object = new Gson().fromJson((String) o, this.returnType);
-        try {
-            Method callback = null;
-            for (Method method:this.receiver.getClass().getMethods()) {
-                if (method.getName().equals(this.callbackMethod)) {
-                    callback = method;
-                    break;
+            this.callback.onRequestFail();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.disconnect();
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage(), e);
                 }
             }
-            if (callback != null) {
-                callback.invoke(this.receiver, object);
-            }
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
         }
+
+        return null;
+    }
+
+    public interface RestRequestCallback {
+        void onRequestSuccess(String json);
+        void onRequestFail();
     }
 }
