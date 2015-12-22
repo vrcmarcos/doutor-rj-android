@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(this.viewPager);
 
-//        this.fetchUpdatedInfo();
+        this.fetchUpdatedInfo();
     }
 
     private void fetchUpdatedInfo() {
@@ -69,9 +69,7 @@ public class MainActivity extends AppCompatActivity
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        for (NotifiableFragment view : NotifiableFragment.NOTIFIABLE_FRAGMENTS) {
-                            view.handleNotification(establishmentsList);
-                        }
+                        NotifiableFragment.broadcastEstablishmentsList(establishmentsList);
                     }
                 });
             }

@@ -1,11 +1,14 @@
 package com.mcardoso.doutorrj.view;
 
-import android.util.Log;
-
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.mcardoso.doutorrj.R;
-import com.mcardoso.doutorrj.model.EstablishmentsList;
+import com.mcardoso.doutorrj.model.Establishment;
 
 /**
  * Created by mcardoso on 12/8/15.
@@ -13,6 +16,7 @@ import com.mcardoso.doutorrj.model.EstablishmentsList;
 public class BestChoiceFragment extends NotifiableFragment {
 
     private static String TAG = "BestChoiceFragment";
+    private static int DEFAULT_ZOOM = 10;
 
     private MapView mapView;
     private GoogleMap map;
@@ -23,67 +27,57 @@ public class BestChoiceFragment extends NotifiableFragment {
     }
 
     @Override
-    public void handleNotification(EstablishmentsList establishmentsList) {
-        Log.d(TAG, "Handling notification"+establishmentsList);
+    public void draw() {
 
-        //        this.mapView = (MapView) rootView.findViewById(R.id.map_view);
-//        this.mapView.onCreate(savedInstanceState);
-//
-//        this.map = this.mapView.getMap();
-//        this.map.getUiSettings().setMyLocationButtonEnabled(true);
-//        this.map.setMyLocationEnabled(true);
+        this.mapView = (MapView) super.view.findViewById(R.id.map_view);
+        this.mapView.onCreate(savedInstanceState);
 
-//        Establishment bestChoice = MainActivity.ESTABLISHMENTS.getResults().get(0);
-//
-//        MapsInitializer.initialize(this.getActivity());
-//
-//        LatLng bestChoiceLatLng = bestChoice.getLatLng();
-//        this.map.addMarker(new MarkerOptions()
-//                        .position(bestChoiceLatLng)
-//                        .title(bestChoice.getName())
-//        );
-//
-//        LatLng currentLatLng = LocationTracker.getInstance().getCurrentLatLng();
-//        this.map.addMarker(new MarkerOptions()
-//                        .position(currentLatLng)
-//                        .title(getResources().getString(R.string.best_choice_map_title))
-//        );
-//
-//        LatLng midPoint = LocationTracker.getMidPoint(bestChoiceLatLng, currentLatLng);
-//
-//        CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(midPoint, 10);
-//        this.map.animateCamera(camUpdate);
+        this.map = this.mapView.getMap();
+        this.map.getUiSettings().setMyLocationButtonEnabled(true);
+        this.map.setMyLocationEnabled(true);
 
-//        // TODO Auto-generated method stub
-//        super.onConfigurationChanged(newConfig);
-//        this.
-//        RelativeLayout rl = (RelativeLayout) findViewById(R.id.about);
-//        rl.removeAllViews();
-//        rl.addView(View.inflate(myView.getContext(), R.layout.about, null));
-//        this.mapView = (MapView) rootView.findViewById(R.id.map_view);
-//        this.mapView.onCreate(savedInstanceState);
-//
-//        this.map = this.mapView.getMap();
-//        this.map.getUiSettings().setMyLocationButtonEnabled(true);
-//        this.map.setMyLocationEnabled(true);
-//        super.changeLayout();
+        MapsInitializer.initialize(this.getActivity());
+
+        Establishment bestChoice = ESTABLISHMENTS_LIST.getResults().get(0);
+
+        LatLng bestChoiceLatLng = bestChoice.getLatLng();
+        this.map.addMarker(new MarkerOptions()
+                        .position(bestChoiceLatLng)
+                        .title(bestChoice.getName())
+        );
+
+        this.map.addMarker(new MarkerOptions()
+                        .position(LAT_LNG)
+                        .title(getResources().getString(R.string.best_choice_map_title))
+        );
+
+        LatLng midPoint = super.getMidPoint(bestChoiceLatLng);
+
+        CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(midPoint, DEFAULT_ZOOM);
+        this.map.animateCamera(camUpdate);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        this.mapView.onResume();
+        if( this.mapView != null ) {
+            this.mapView.onResume();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        this.mapView.onDestroy();
+        if( this.mapView != null ) {
+            this.mapView.onDestroy();
+        }
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-//        this.mapView.onLowMemory();
+        if( this.mapView != null ) {
+            this.mapView.onLowMemory();
+        }
     }
 }

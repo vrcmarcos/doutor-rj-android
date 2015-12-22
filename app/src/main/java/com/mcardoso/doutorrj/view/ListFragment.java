@@ -1,7 +1,6 @@
 package com.mcardoso.doutorrj.view;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 
 import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.model.Establishment;
-import com.mcardoso.doutorrj.model.EstablishmentsList;
 
 import java.util.List;
 
@@ -28,13 +26,10 @@ public class ListFragment extends NotifiableFragment {
     }
 
     @Override
-    public void handleNotification(EstablishmentsList establishmentsList) {
-        Log.d(TAG, "Handling notification" + establishmentsList);
-        this.changeLayout();
-
+    public void draw() {
         ListView listView = (ListView) this.view.findViewById(R.id.listView);
         listView.setAdapter(
-                new CustomListAdapter(savedInstanceState, establishmentsList.getResults())
+                new CustomListAdapter(savedInstanceState, ESTABLISHMENTS_LIST.getResults())
         );
     }
 
@@ -75,9 +70,7 @@ public class ListFragment extends NotifiableFragment {
 
             ((TextView)convertView.findViewById(R.id.row_title)).setText(establishment.getName());
 
-//            Float distanceInMeters = LocationTracker.getInstance().getLastKnowLocation().distanceTo(
-//                    establishment.getLocation());
-            Float distanceInMeters = 900f;
+            Float distanceInMeters = LOCATION.distanceTo(establishment.getLocation());
             String formattedDistance;
             if (distanceInMeters > 1000f) {
                 formattedDistance = String.format("%.2fkm", distanceInMeters/1000f);
