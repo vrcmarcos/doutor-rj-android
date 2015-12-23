@@ -26,7 +26,7 @@ public class RestRequest extends AsyncTask<String, Void, String> {
     }
 
     private static String TAG = "RestRequest";
-    private static int TIMEOUT_IN_MILLIS = 1000 * 30;
+    private static int TIMEOUT_IN_MILLIS = 1000 * 5;
 
     private String url;
     private Method method;

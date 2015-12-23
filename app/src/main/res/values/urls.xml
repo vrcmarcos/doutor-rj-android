@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="api_establishments_per_type">http://192.168.25.14:8000/unidades.json</string>
     <string name="api_all_establishments">http://192.168.25.14:8000/estabelecimentos.json</string>
-    <!--<string name="api_all_establishments">http://10.1.209.77:8000/estabelecimentos.json</string>-->
 </resources>

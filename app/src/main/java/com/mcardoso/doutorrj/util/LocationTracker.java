@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.mcardoso.doutorrj.MainActivity;
 import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.view.NotifiableFragment;
@@ -122,14 +121,6 @@ public class LocationTracker extends Service {
                                 ctx.startActivity(intent);
                             }
                         })
-                .setNegativeButton(
-                        this.res.getString(R.string.gps_off_dialog_negative_button),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                showOfflineModeDialog();
-                            }
-                        })
                 .create();
         this.dialog.show();
     }
@@ -142,27 +133,12 @@ public class LocationTracker extends Service {
                 .setPositiveButton(this.res.getString(R.string.location_not_defined_dialog_positive_button),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                retries = 0;
+                                schedule();
                                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                                 ctx.startActivity(intent);
                             }
                         })
-                .setNegativeButton(this.res.getString(R.string.location_not_defined_dialog_negative_button),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                showOfflineModeDialog();
-                            }
-                        })
-                .create();
-        this.dialog.show();
-    }
-
-    private void showOfflineModeDialog() {
-        this.dialog = new AlertDialog.Builder(this.ctx)
-                .setTitle(this.res.getString(R.string.offline_mode_dialog_title))
-                .setCancelable(false)
-                .setMessage(this.res.getString(R.string.offline_mode_dialog_text))
-                .setPositiveButton(this.res.getString(R.string.offline_mode_dialog_ok_button), null)
                 .create();
         this.dialog.show();
     }

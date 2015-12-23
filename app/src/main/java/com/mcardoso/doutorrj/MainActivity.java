@@ -3,6 +3,9 @@ package com.mcardoso.doutorrj;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -12,18 +15,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.gson.Gson;
-import com.mcardoso.doutorrj.model.EstablishmentsList;
+import com.mcardoso.doutorrj.response.EstablishmentsPerTypeResponse;
+import com.mcardoso.doutorrj.util.EstablishmentUtils;
 import com.mcardoso.doutorrj.util.LocationTracker;
-import com.mcardoso.doutorrj.util.RestRequest;
-import com.mcardoso.doutorrj.view.CustomPageAdapter;
+import com.mcardoso.doutorrj.view.BestChoiceFragment;
+import com.mcardoso.doutorrj.view.ListFragment;
 import com.mcardoso.doutorrj.view.NotifiableFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    private static String TAG = "MainActivity";
-    private static Gson GSON = new Gson();
 
     private CustomPageAdapter pageAdapter;
     private ViewPager viewPager;
@@ -34,6 +34,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         LocationTracker.getInstance().setContext(this);
+
+        EstablishmentsPerTypeResponse response = new EstablishmentUtils(this).getCachedResponse();
+        NotifiableFragment.broadcastEstablishmentsPerTypeResponse(response);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -47,38 +50,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager(), this);
+        this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
         this.viewPager = (ViewPager) findViewById(R.id.pager);
         this.viewPager.setAdapter(this.pageAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(this.viewPager);
-
-        this.fetchUpdatedInfo();
-    }
-
-    private void fetchUpdatedInfo() {
-
-        String url = getResources().getString(R.string.api_all_establishments);
-        new RestRequest(url, RestRequest.Method.GET, new RestRequest.RestRequestCallback() {
-            @Override
-            public void onRequestSuccess(String json) {
-
-                final EstablishmentsList establishmentsList = GSON.fromJson(json, EstablishmentsList.class);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        NotifiableFragment.broadcastEstablishmentsList(establishmentsList);
-                    }
-                });
-            }
-
-            @Override
-            public void onRequestFail() {
-
-            }
-        }).execute();
     }
 
     @Override
@@ -142,5 +119,48 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         LocationTracker.getInstance().onResume();
+    }
+
+    class CustomPageAdapter extends FragmentPagerAdapter {
+
+        public CustomPageAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment fragment;
+
+            switch(position) {
+                case 1:
+                    fragment = new ListFragment();
+                    break;
+                default:
+                    fragment = new BestChoiceFragment();
+                    break;
+            }
+
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            int resourceId;
+
+            switch (position) {
+                case 1:
+                    resourceId = R.string.list_title;
+                    break;
+                default:
+                    resourceId = R.string.best_choice_title;
+                    break;
+            }
+            return getResources().getString(resourceId);
+        }
     }
 }

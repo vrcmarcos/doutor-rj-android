@@ -11,7 +11,10 @@ import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mcardoso.doutorrj.R;
-import com.mcardoso.doutorrj.model.EstablishmentsList;
+import com.mcardoso.doutorrj.model.Establishment;
+import com.mcardoso.doutorrj.model.EstablishmentType;
+import com.mcardoso.doutorrj.response.EstablishmentsPerTypeResponse;
+import com.mcardoso.doutorrj.util.EstablishmentUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +28,17 @@ public abstract class NotifiableFragment extends Fragment {
 
     protected View view;
     protected Bundle savedInstanceState;
-    protected static EstablishmentsList ESTABLISHMENTS_LIST;
+
+    private EstablishmentType lastType = null;
+    private List<Establishment> lastList = null;
+
+    protected static EstablishmentsPerTypeResponse ESTABLISHMENTS_PER_TYPE_RESPONSE;
     protected static Location LOCATION;
     protected static LatLng LAT_LNG;
 
-    protected abstract Integer getTargetLayoutId();
     public abstract void draw();
+
+    protected abstract Integer getTargetLayoutId();
 
     @Nullable
     @Override
@@ -41,8 +49,12 @@ public abstract class NotifiableFragment extends Fragment {
         return this.view;
     }
 
-    public static void broadcastEstablishmentsList(EstablishmentsList establishmentsList) {
-        ESTABLISHMENTS_LIST = establishmentsList;
+    public static void updateEstablishmentsPerTypeResponse(EstablishmentsPerTypeResponse response) {
+        ESTABLISHMENTS_PER_TYPE_RESPONSE = response;
+    }
+
+    public static void broadcastEstablishmentsPerTypeResponse(EstablishmentsPerTypeResponse response) {
+        ESTABLISHMENTS_PER_TYPE_RESPONSE = response;
         checkConditions();
     }
 
@@ -53,13 +65,31 @@ public abstract class NotifiableFragment extends Fragment {
     }
 
     private static void checkConditions() {
-        if ( ESTABLISHMENTS_LIST != null && LOCATION != null ) {
-            ESTABLISHMENTS_LIST.sort(LAT_LNG);
+        if ( ESTABLISHMENTS_PER_TYPE_RESPONSE != null && LOCATION != null ) {
+
+            for (EstablishmentsPerTypeResponse.EstablishmentsPerType establishmentsList : ESTABLISHMENTS_PER_TYPE_RESPONSE.getResults()) {
+                EstablishmentUtils.sort(establishmentsList.getEstablishments(), LAT_LNG);
+            }
+
             for (NotifiableFragment frag : NOTIFIABLE_FRAGMENTS) {
                 frag.changeLayout();
                 frag.draw();
             }
         }
+    }
+
+    protected List<Establishment> getCurrentList(EstablishmentType type) {
+        if ( this.lastType == null || !this.lastType.equals(type) ) {
+            for(EstablishmentsPerTypeResponse.EstablishmentsPerType e :
+                    ESTABLISHMENTS_PER_TYPE_RESPONSE.getResults()) {
+                if ( e.getType().equals(type) ) {
+                    this.lastType = type;
+                    this.lastList = e.getEstablishments();
+                    break;
+                }
+            }
+        }
+        return this.lastList;
     }
 
     protected void changeLayout() {
@@ -68,7 +98,7 @@ public abstract class NotifiableFragment extends Fragment {
         layout.addView(View.inflate(this.view.getContext(), this.getTargetLayoutId(), null));
     }
 
-    public LatLng getMidPoint(LatLng latLng){
+    protected LatLng getMidPoint(LatLng latLng){
 
         double lat1 = latLng.latitude;
         double lon1 = latLng.longitude;

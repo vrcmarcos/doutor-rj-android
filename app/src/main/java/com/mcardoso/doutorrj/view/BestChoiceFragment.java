@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.model.Establishment;
+import com.mcardoso.doutorrj.model.EstablishmentType;
 
 /**
  * Created by mcardoso on 12/8/15.
@@ -38,7 +39,7 @@ public class BestChoiceFragment extends NotifiableFragment {
 
         MapsInitializer.initialize(this.getActivity());
 
-        Establishment bestChoice = ESTABLISHMENTS_LIST.getResults().get(0);
+        Establishment bestChoice = super.getCurrentList(EstablishmentType.HOSPITAL).get(0);
 
         LatLng bestChoiceLatLng = bestChoice.getLatLng();
         this.map.addMarker(new MarkerOptions()

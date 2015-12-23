@@ -17,16 +17,9 @@
     <string name="gps_off_dialog_title">O GPS está desligado!</string>
     <string name="gps_off_dialog_text">Para usar o aplicativo, você deve ligar o GPS.</string>
     <string name="gps_off_dialog_positive_button">Ligar o GPS</string>
-    <string name="gps_off_dialog_negative_button">Permanecer offline</string>
 
     <!-- Location Not Defined Dialog -->
     <string name="location_not_defined_dialog_title">Não foi possível capturar sua posição.</string>
     <string name="location_not_defined_dialog_text">Não conseguimos descobrir sua posição atual.</string>
     <string name="location_not_defined_dialog_positive_button">Tentar Novamente</string>
-    <string name="location_not_defined_dialog_negative_button">Permanecer offline</string>
-
-    <!-- Offline Mode Dialog -->
-    <string name="offline_mode_dialog_title">Modo Offline</string>
-    <string name="offline_mode_dialog_text">Não se preocupe! Continuaremos tentando atualizar seu aplicativo!</string>
-    <string name="offline_mode_dialog_ok_button">Ok! :)</string>
 </resources>

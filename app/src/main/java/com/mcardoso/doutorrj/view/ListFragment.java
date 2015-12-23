@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.model.Establishment;
+import com.mcardoso.doutorrj.model.EstablishmentType;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class ListFragment extends NotifiableFragment {
     public void draw() {
         ListView listView = (ListView) this.view.findViewById(R.id.listView);
         listView.setAdapter(
-                new CustomListAdapter(savedInstanceState, ESTABLISHMENTS_LIST.getResults())
+                new CustomListAdapter(savedInstanceState, super.getCurrentList(EstablishmentType.HOSPITAL))
         );
     }
 
