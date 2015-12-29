@@ -1,15 +1,9 @@
 package com.mcardoso.doutorrj.view;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.mcardoso.doutorrj.R;
-import com.mcardoso.doutorrj.model.Establishment;
-import com.mcardoso.doutorrj.model.EstablishmentType;
 
 /**
  * Created by mcardoso on 12/8/15.
@@ -32,30 +26,9 @@ public class BestChoiceFragment extends NotifiableFragment {
 
         this.mapView = (MapView) super.view.findViewById(R.id.map_view);
         this.mapView.onCreate(savedInstanceState);
-
         this.map = this.mapView.getMap();
-        this.map.getUiSettings().setMyLocationButtonEnabled(true);
-        this.map.setMyLocationEnabled(true);
 
         MapsInitializer.initialize(this.getActivity());
-
-        Establishment bestChoice = super.getCurrentList(EstablishmentType.HOSPITAL).get(0);
-
-        LatLng bestChoiceLatLng = bestChoice.getLatLng();
-        this.map.addMarker(new MarkerOptions()
-                        .position(bestChoiceLatLng)
-                        .title(bestChoice.getName())
-        );
-
-        this.map.addMarker(new MarkerOptions()
-                        .position(LAT_LNG)
-                        .title(getResources().getString(R.string.best_choice_map_title))
-        );
-
-        LatLng midPoint = super.getMidPoint(bestChoiceLatLng);
-
-        CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(midPoint, DEFAULT_ZOOM);
-        this.map.animateCamera(camUpdate);
     }
 
     @Override

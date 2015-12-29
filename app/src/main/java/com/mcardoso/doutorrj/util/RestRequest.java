@@ -3,8 +3,6 @@ package com.mcardoso.doutorrj.util;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -49,19 +47,19 @@ public class RestRequest extends AsyncTask<String, Void, String> {
             conn.setRequestProperty("Accept", "application/json");
 
             if (conn.getResponseCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+                Log.e(TAG, "Failed : HTTP error code : " + conn.getResponseCode());
+                this.callback.onRequestFail();
+            } else {
+                BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                String output;
+                StringBuilder json = new StringBuilder();
+                while ((output = br.readLine()) != null) {
+                    json.append(output);
+                }
+
+                conn.disconnect();
+                this.callback.onRequestSuccess(json.toString());
             }
-
-            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-
-            String output;
-            StringBuilder json = new StringBuilder();
-            while ((output = br.readLine()) != null) {
-                json.append(output);
-            }
-
-            conn.disconnect();
-            this.callback.onRequestSuccess(json.toString());
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
             this.callback.onRequestFail();

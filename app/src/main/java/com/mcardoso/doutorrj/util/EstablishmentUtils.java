@@ -36,19 +36,18 @@ public class EstablishmentUtils {
     private static String TAG = "EstablishmentUtils";
 
     private Gson gson;
-
     private Context ctx;
 
     public EstablishmentUtils(Context ctx) {
         this.ctx = ctx;
-
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(EstablishmentType.class, new EstablishmentTypeDeserializer())
                 .create();
+        NotifiableFragment.broadcastEstablishmentsPerTypeResponse(this.getCachedResponse());
         this.update();
     }
 
-    public EstablishmentsPerTypeResponse getCachedResponse() {
+    private EstablishmentsPerTypeResponse getCachedResponse() {
         Resources res = this.ctx.getResources();
         String key = res.getString(R.string.shared_preferences_key);
         SharedPreferences prefs = this.ctx.getSharedPreferences(key, Context.MODE_PRIVATE);

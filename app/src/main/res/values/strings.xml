@@ -22,4 +22,10 @@
     <string name="location_not_defined_dialog_title">Não foi possível capturar sua posição.</string>
     <string name="location_not_defined_dialog_text">Não conseguimos descobrir sua posição atual.</string>
     <string name="location_not_defined_dialog_positive_button">Tentar Novamente</string>
+
+    <!-- Menu -->
+    <string name="menu_hospital">Hospital Geral</string>
+    <string name="menu_secretaria_saude">Secretaria de Saúde</string>
+    <string name="menu_policlina">Policlínica</string>
+    <string name="menu_config">Configurações</string>
 </resources>

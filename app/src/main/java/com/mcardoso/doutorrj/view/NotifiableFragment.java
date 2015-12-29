@@ -29,12 +29,13 @@ public abstract class NotifiableFragment extends Fragment {
     protected View view;
     protected Bundle savedInstanceState;
 
-    private EstablishmentType lastType = null;
-    private List<Establishment> lastList = null;
-
     protected static EstablishmentsPerTypeResponse ESTABLISHMENTS_PER_TYPE_RESPONSE;
     protected static Location LOCATION;
     protected static LatLng LAT_LNG;
+
+    private static EstablishmentType CURRENT_TYPE = EstablishmentType.getDefault();
+    private static List<Establishment> CURRENT_LIST = null;
+    private static Boolean ESTABLISHMENTS_LIST_SORTED = false;
 
     public abstract void draw();
 
@@ -53,6 +54,14 @@ public abstract class NotifiableFragment extends Fragment {
         ESTABLISHMENTS_PER_TYPE_RESPONSE = response;
     }
 
+    public static void broadcastEstablishmentTypeChange(EstablishmentType newType) {
+        if ( !CURRENT_TYPE.equals(newType) ) {
+            CURRENT_TYPE = newType;
+            CURRENT_LIST = null;
+            checkConditions();
+        }
+    }
+
     public static void broadcastEstablishmentsPerTypeResponse(EstablishmentsPerTypeResponse response) {
         ESTABLISHMENTS_PER_TYPE_RESPONSE = response;
         checkConditions();
@@ -67,8 +76,11 @@ public abstract class NotifiableFragment extends Fragment {
     private static void checkConditions() {
         if ( ESTABLISHMENTS_PER_TYPE_RESPONSE != null && LOCATION != null ) {
 
-            for (EstablishmentsPerTypeResponse.EstablishmentsPerType establishmentsList : ESTABLISHMENTS_PER_TYPE_RESPONSE.getResults()) {
-                EstablishmentUtils.sort(establishmentsList.getEstablishments(), LAT_LNG);
+            if ( !ESTABLISHMENTS_LIST_SORTED ) {
+                for (EstablishmentsPerTypeResponse.EstablishmentsPerType establishmentsList : ESTABLISHMENTS_PER_TYPE_RESPONSE.getResults()) {
+                    EstablishmentUtils.sort(establishmentsList.getEstablishments(), LAT_LNG);
+                }
+                ESTABLISHMENTS_LIST_SORTED = true;
             }
 
             for (NotifiableFragment frag : NOTIFIABLE_FRAGMENTS) {
@@ -78,18 +90,16 @@ public abstract class NotifiableFragment extends Fragment {
         }
     }
 
-    protected List<Establishment> getCurrentList(EstablishmentType type) {
-        if ( this.lastType == null || !this.lastType.equals(type) ) {
-            for(EstablishmentsPerTypeResponse.EstablishmentsPerType e :
-                    ESTABLISHMENTS_PER_TYPE_RESPONSE.getResults()) {
-                if ( e.getType().equals(type) ) {
-                    this.lastType = type;
-                    this.lastList = e.getEstablishments();
+    protected List<Establishment> getCurrentList() {
+        if ( CURRENT_LIST == null ) {
+            for (EstablishmentsPerTypeResponse.EstablishmentsPerType e : ESTABLISHMENTS_PER_TYPE_RESPONSE.getResults()) {
+                if (e.getType().equals(CURRENT_TYPE)) {
+                    CURRENT_LIST = e.getEstablishments();
                     break;
                 }
             }
         }
-        return this.lastList;
+        return CURRENT_LIST;
     }
 
     protected void changeLayout() {

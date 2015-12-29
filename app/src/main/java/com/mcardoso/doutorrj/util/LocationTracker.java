@@ -130,13 +130,11 @@ public class LocationTracker extends Service {
                 .setTitle(this.res.getString(R.string.location_not_defined_dialog_title))
                 .setCancelable(false)
                 .setMessage(this.res.getString(R.string.location_not_defined_dialog_text))
-                .setPositiveButton(this.res.getString(R.string.location_not_defined_dialog_positive_button),
+                .setPositiveButton(R.string.location_not_defined_dialog_positive_button,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 retries = 0;
                                 schedule();
-                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                ctx.startActivity(intent);
                             }
                         })
                 .create();

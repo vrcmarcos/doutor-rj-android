@@ -15,7 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.mcardoso.doutorrj.response.EstablishmentsPerTypeResponse;
+import com.mcardoso.doutorrj.model.EstablishmentType;
 import com.mcardoso.doutorrj.util.EstablishmentUtils;
 import com.mcardoso.doutorrj.util.LocationTracker;
 import com.mcardoso.doutorrj.view.BestChoiceFragment;
@@ -25,9 +25,6 @@ import com.mcardoso.doutorrj.view.NotifiableFragment;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private CustomPageAdapter pageAdapter;
-    private ViewPager viewPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +32,7 @@ public class MainActivity extends AppCompatActivity
 
         LocationTracker.getInstance().setContext(this);
 
-        EstablishmentsPerTypeResponse response = new EstablishmentUtils(this).getCachedResponse();
-        NotifiableFragment.broadcastEstablishmentsPerTypeResponse(response);
+        new EstablishmentUtils(this);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -50,12 +46,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
-        this.viewPager = (ViewPager) findViewById(R.id.pager);
-        this.viewPager.setAdapter(this.pageAdapter);
+        CustomPageAdapter pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(pageAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(this.viewPager);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -93,22 +89,8 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
+        EstablishmentType type = EstablishmentType.getTypeById(item.getItemId());
+        NotifiableFragment.broadcastEstablishmentTypeChange(type);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
