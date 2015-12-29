@@ -28,7 +28,8 @@
         android:layout_alignParentEnd="true"
         android:textSize="15sp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"/>
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -43,5 +44,6 @@
         android:layout_below="@+id/row_title"
         android:textSize="15sp"
         android:layout_marginLeft="5dp"
-        android:layout_alignBottom="@+id/row_distance" />
+        android:layout_alignBottom="@+id/row_distance"
+        android:layout_marginTop="10dp" />
 </RelativeLayout>
