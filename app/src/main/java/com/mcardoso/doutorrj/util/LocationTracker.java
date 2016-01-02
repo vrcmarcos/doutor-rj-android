@@ -1,5 +1,6 @@
 package com.mcardoso.doutorrj.util;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -54,57 +56,69 @@ public class LocationTracker extends Service {
 
     public void setup() throws SecurityException {
 
-        if ( this.locationManager != null ) {
+        boolean hasPermissions = true;
 
-            boolean isNetworkEnabled = this.locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            boolean isGPSEnabled = this.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+            MainActivity activity = (MainActivity) this.ctx;
+            if( !activity.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) ) {
+                hasPermissions = false;
+                activity.askPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+        }
 
-            if (isNetworkEnabled || isGPSEnabled) {
-                if (isNetworkEnabled) {
-                    Log.d(TAG, "Network enabled");
-                    Location location = this.locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    if (location != null) {
-                        this.lastKnowLocation = location;
+        if( hasPermissions ){
+            if (this.locationManager != null) {
+
+                boolean isNetworkEnabled = this.locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                boolean isGPSEnabled = this.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+                if (isNetworkEnabled || isGPSEnabled) {
+                    if (isNetworkEnabled) {
+                        Log.d(TAG, "Network enabled");
+                        Location location = this.locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        if (location != null) {
+                            this.lastKnowLocation = location;
+                        }
                     }
-                }
 
-                if (isGPSEnabled) {
-                    Log.d(TAG, "GPS enabled");
-                    Location location = this.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    if (location != null) {
-                        this.lastKnowLocation = location;
+                    if (isGPSEnabled) {
+                        Log.d(TAG, "GPS enabled");
+                        Location location = this.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (location != null) {
+                            this.lastKnowLocation = location;
+                        }
                     }
-                }
 
-                if (this.lastKnowLocation == null) {
-                    Log.d(TAG, "Not ready. Need to schedule.");
-                    if (this.retries < MAX_SCHEDULE_RETRIES) {
-                        this.retries += 1;
-                        this.schedule();
+                    if (this.lastKnowLocation == null) {
+                        Log.d(TAG, "Not ready. Need to schedule.");
+                        if (this.retries < MAX_SCHEDULE_RETRIES) {
+                            this.retries += 1;
+                            this.schedule();
+                        } else {
+                            this.showLocationNotDefinedDialog();
+                        }
                     } else {
-                        this.showLocationNotDefinedDialog();
+                        Log.d(TAG, "READY! " + this.lastKnowLocation);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ((MainActivity) ctx).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        NotifiableFragment.broadcastLocation(lastKnowLocation);
+                                    }
+                                });
+                            }
+                        }, 1000 * BROADCAST_LATLNG_DELAY_IN_SECONDS);
                     }
                 } else {
-                    Log.d(TAG, "READY! " + this.lastKnowLocation);
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            ((MainActivity) ctx).runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    NotifiableFragment.broadcastLocation(lastKnowLocation);
-                                }
-                            });
-                        }
-                    }, 1000 * BROADCAST_LATLNG_DELAY_IN_SECONDS);
+                    Log.d(TAG, "Show alert");
+                    this.showGPSOffDialog();
                 }
             } else {
-                Log.d(TAG, "Show alert");
-                this.showGPSOffDialog();
+                this.schedule();
             }
-        } else {
-            this.schedule();
         }
     }
 

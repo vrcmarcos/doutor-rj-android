@@ -1,5 +1,8 @@
 package com.mcardoso.doutorrj;
 
+import android.annotation.TargetApi;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -101,6 +104,25 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         LocationTracker.getInstance().onResume();
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public boolean hasPermission(String permission) {
+        return PackageManager.PERMISSION_GRANTED == this.checkSelfPermission(permission);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public void askPermission(String permission) {
+        this.requestPermissions(new String[]{permission}, 1);
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.M)
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if( hasPermission(permissions[0]) ) {
+            LocationTracker.getInstance().setup();
+        }
     }
 
     class CustomPageAdapter extends FragmentPagerAdapter {
