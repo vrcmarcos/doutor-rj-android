@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mcardoso.doutorrj.MainActivity;
 import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.view.NotifiableFragment;
@@ -66,7 +67,7 @@ public class LocationTracker extends Service {
             }
         }
 
-        if( hasPermissions ){
+        if( hasPermissions ) {
             if (this.locationManager != null) {
 
                 boolean isNetworkEnabled = this.locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -178,6 +179,28 @@ public class LocationTracker extends Service {
                 setup();
             }
         }, 1000 * SCHEDULE_DELAY_IN_SECONDS);
+    }
+
+    public LatLng getMidPoint(LatLng from, LatLng to){
+
+        double lat1 = from.latitude;
+        double lon1 = from.longitude;
+        double lat2 = to.latitude;
+        double lon2 = to.longitude;
+
+        double dLon = Math.toRadians(lon2 - lon1);
+
+        //convert to radians
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+        lon1 = Math.toRadians(lon1);
+
+        double Bx = Math.cos(lat2) * Math.cos(dLon);
+        double By = Math.cos(lat2) * Math.sin(dLon);
+        double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));
+        double lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
+
+        return new LatLng(Math.toDegrees(lat3), Math.toDegrees(lon3));
     }
 
     @Nullable

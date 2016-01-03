@@ -21,6 +21,11 @@ public class ListFragment extends NotifiableFragment {
     private static String TAG = "ListFragment";
 
     @Override
+    protected boolean useLoadingScreen() {
+        return true;
+    }
+
+    @Override
     protected Integer getTargetLayoutId() {
         return R.layout.fragment_list;
     }

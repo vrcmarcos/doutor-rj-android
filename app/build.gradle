@@ -30,4 +30,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:8.3.0'
     compile 'com.google.android.gms:play-services-maps:8.3.0'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.beardedhen:androidbootstrap:2.0.1'
 }

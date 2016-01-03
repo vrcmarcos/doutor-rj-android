@@ -39,13 +39,15 @@ public abstract class NotifiableFragment extends Fragment {
 
     public abstract void draw();
 
+    protected abstract boolean useLoadingScreen();
     protected abstract Integer getTargetLayoutId();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         NOTIFIABLE_FRAGMENTS.add(this);
-        this.view = inflater.inflate(R.layout.fragment_load, container, false);
+        int layoutId = this.useLoadingScreen() ? R.layout.fragment_load : this.getTargetLayoutId();
+        this.view = inflater.inflate(layoutId, container, false);
         this.savedInstanceState = savedInstanceState;
         return this.view;
     }
@@ -103,9 +105,11 @@ public abstract class NotifiableFragment extends Fragment {
     }
 
     protected void changeLayout() {
-        RelativeLayout layout = (RelativeLayout) this.view.findViewById(R.id.fragment_load);
-        layout.removeAllViews();
-        layout.addView(View.inflate(this.view.getContext(), this.getTargetLayoutId(), null));
+        if ( this.useLoadingScreen() ) {
+            RelativeLayout layout = (RelativeLayout) this.view.findViewById(R.id.fragment_load);
+            layout.removeAllViews();
+            layout.addView(View.inflate(this.view.getContext(), this.getTargetLayoutId(), null));
+        }
     }
 
     protected LatLng getMidPoint(LatLng latLng){
