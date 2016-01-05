@@ -9,7 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mcardoso.doutorrj.R;
-import com.mcardoso.doutorrj.model.Establishment;
+import com.mcardoso.doutorrj.model.establishment.Establishment;
 
 import java.util.List;
 

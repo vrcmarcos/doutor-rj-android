@@ -1,8 +1,8 @@
 package com.mcardoso.doutorrj.response;
 
 import com.google.gson.annotations.SerializedName;
-import com.mcardoso.doutorrj.model.Establishment;
-import com.mcardoso.doutorrj.model.EstablishmentType;
+import com.mcardoso.doutorrj.model.establishment.Establishment;
+import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
 
 import java.util.List;
 

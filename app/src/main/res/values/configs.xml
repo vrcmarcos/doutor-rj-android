@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="api_key_v2">AIzaSyDCcPHpSobZDi-9xrWBr5mznH3pLZEf-Is</string>
+    <string name="server_key">AIzaSyCzmdy8LRq0T4GaHarg-jmt7MKtpa7VVMg</string>
     <string name="shared_preferences_key">7eZgezx8nANh2a3nB6sa5Duf</string>
     <string name="shared_preferences_establishments">4tKHgfdBQHbNhz8YLPAyLWL4</string>
 </resources>

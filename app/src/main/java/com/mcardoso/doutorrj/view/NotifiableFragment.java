@@ -11,8 +11,8 @@ import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mcardoso.doutorrj.R;
-import com.mcardoso.doutorrj.model.Establishment;
-import com.mcardoso.doutorrj.model.EstablishmentType;
+import com.mcardoso.doutorrj.model.establishment.Establishment;
+import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
 import com.mcardoso.doutorrj.response.EstablishmentsPerTypeResponse;
 import com.mcardoso.doutorrj.util.EstablishmentUtils;
 

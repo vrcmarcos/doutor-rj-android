@@ -1,4 +1,4 @@
-package com.mcardoso.doutorrj.model;
+package com.mcardoso.doutorrj.model.establishment;
 
 import com.mcardoso.doutorrj.R;
 

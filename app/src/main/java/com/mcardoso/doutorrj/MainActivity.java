@@ -18,7 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.mcardoso.doutorrj.model.EstablishmentType;
+import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
 import com.mcardoso.doutorrj.util.EstablishmentUtils;
 import com.mcardoso.doutorrj.util.LocationTracker;
 import com.mcardoso.doutorrj.view.BestChoiceFragment;

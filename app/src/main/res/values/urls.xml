@@ -2,4 +2,7 @@
 <resources>
     <string name="api_establishments_per_type">http://192.168.25.14:8000/unidades.json</string>
     <string name="api_all_establishments">http://192.168.25.14:8000/estabelecimentos.json</string>
+    <string name="maps_api_travel_info" formatted="false">https://maps.googleapis.com/maps/api/directions/json?origin=%s,%s&amp;destination=%s,%s&amp;units=metric</string>
+    <string name="maps_api_go_to" formatted="false">http://maps.google.com/maps?daddr=%s,%s</string>
+
 </resources>

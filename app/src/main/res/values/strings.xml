@@ -8,7 +8,7 @@
 
     <!-- Best Choice Fragment -->
     <string name="best_choice_title">Melhor escolha</string>
-    <string name="best_choice_map_title">Você</string>
+    <string name="best_choice_go_to">Traçar rota</string>
 
     <!-- List Fragment -->
     <string name="list_title">Todas as opções</string>
