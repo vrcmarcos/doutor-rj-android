@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryDark">#FF405908</color>
-    <color name="colorPrimary">#FF4F7302</color>
-    <color name="colorAccent">#FF7AA80F</color>
-    <!--<color name="bootstrapColor">#FF078903</color>-->
-    <color name="bootstrapColor">#FF4F7302</color>
+    <color name="colorPrimaryDark">#FF427004</color>
+    <color name="colorPrimary">#FF608101</color>
+    <color name="colorAccent">#FF608101</color>
+    <color name="bootstrapColor">#FF078903</color>
     <color name="bootstrapTextColor">#FFFFFFFF</color>
     <color name="polyline">#FF4396FD</color>
     <color name="polylineBorder">#FF3062D0</color>
