@@ -1,4 +1,4 @@
-package com.mcardoso.doutorrj.util;
+package com.mcardoso.doutorrj.helper;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;
@@ -17,7 +17,7 @@ import static com.beardedhen.androidbootstrap.utils.ColorUtils.resolveColor;
 /**
  * Created by mcardoso on 1/5/16.
  */
-public class BootstrapCustom {
+public class BootstrapHelper {
 
     private static Brand BRAND;
 

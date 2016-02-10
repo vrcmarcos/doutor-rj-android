@@ -1,4 +1,4 @@
-package com.mcardoso.doutorrj.util;
+package com.mcardoso.doutorrj.helper;
 
 import android.Manifest;
 import android.app.Service;
@@ -24,14 +24,14 @@ import com.mcardoso.doutorrj.view.NotifiableFragment;
 /**
  * Created by mcardoso on 12/13/15.
  */
-public class LocationTracker extends Service {
+public class LocationHelper extends Service {
 
     private static final int MAX_SCHEDULE_RETRIES = 3;
     private static final int SCHEDULE_DELAY_IN_SECONDS = 2;
     private static final int BROADCAST_LATLNG_DELAY_IN_SECONDS = 1;
 
-    private static String TAG = "LocationTracker";
-    private static LocationTracker ourInstance = new LocationTracker();
+    private static String TAG = "LocationHelper";
+    private static LocationHelper ourInstance = new LocationHelper();
 
     private Location lastKnowLocation = null;
     private LocationManager locationManager = null;
@@ -42,10 +42,10 @@ public class LocationTracker extends Service {
 
     public Context ctx;
 
-    private LocationTracker() {
+    private LocationHelper() {
     }
 
-    public static LocationTracker getInstance() {
+    public static LocationHelper getInstance() {
         return ourInstance;
     }
 

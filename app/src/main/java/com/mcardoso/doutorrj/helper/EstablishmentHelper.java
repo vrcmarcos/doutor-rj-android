@@ -1,4 +1,4 @@
-package com.mcardoso.doutorrj.util;
+package com.mcardoso.doutorrj.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -31,14 +31,14 @@ import java.util.List;
 /**
  * Created by mcardoso on 12/23/15.
  */
-public class EstablishmentUtils {
+public class EstablishmentHelper {
 
-    private static String TAG = "EstablishmentUtils";
+    private static String TAG = "EstablishmentHelper";
 
     private Gson gson;
     private Context ctx;
 
-    public EstablishmentUtils(Context ctx) {
+    public EstablishmentHelper(Context ctx) {
         this.ctx = ctx;
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(EstablishmentType.class, new EstablishmentTypeDeserializer())
@@ -92,7 +92,7 @@ public class EstablishmentUtils {
 
     private void update() {
         String url = this.ctx.getResources().getString(R.string.api_establishments_per_type);
-        new RestRequest(url, RestRequest.Method.GET, new RestRequest.RestRequestCallback() {
+        new RequestHelper(url, RequestHelper.Method.GET, new RequestHelper.RestRequestCallback() {
             @Override
             public void onRequestSuccess(String json) {
                 setCachedResponse(json);
@@ -116,13 +116,13 @@ public class EstablishmentUtils {
             @Override
             public int compare(Establishment lhs, Establishment rhs) {
                 Location location1 = new Location("");
-                location1.setLongitude(Double.parseDouble(lhs.getLongitude()));
-                location1.setLatitude(Double.parseDouble(lhs.getLatitude()));
+                location1.setLongitude(lhs.getLongitude());
+                location1.setLatitude(lhs.getLatitude());
                 Float distance1 = location.distanceTo(location1);
 
                 Location location2 = new Location("");
-                location2.setLongitude(Double.parseDouble(rhs.getLongitude()));
-                location2.setLatitude(Double.parseDouble(rhs.getLatitude()));
+                location2.setLongitude(rhs.getLongitude());
+                location2.setLatitude(rhs.getLatitude());
                 Float distance2 = location.distanceTo(location2);
 
                 return Math.round(distance1 - distance2);

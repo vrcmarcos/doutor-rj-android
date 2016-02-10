@@ -14,7 +14,7 @@ import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
 import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
 import com.mcardoso.doutorrj.response.EstablishmentsPerTypeResponse;
-import com.mcardoso.doutorrj.util.EstablishmentUtils;
+import com.mcardoso.doutorrj.helper.EstablishmentHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +80,7 @@ public abstract class NotifiableFragment extends Fragment {
 
             if ( !ESTABLISHMENTS_LIST_SORTED ) {
                 for (EstablishmentsPerTypeResponse.EstablishmentsPerType establishmentsList : ESTABLISHMENTS_PER_TYPE_RESPONSE.getResults()) {
-                    EstablishmentUtils.sort(establishmentsList.getEstablishments(), LAT_LNG);
+                    EstablishmentHelper.sort(establishmentsList.getEstablishments(), LAT_LNG);
                 }
                 ESTABLISHMENTS_LIST_SORTED = true;
             }

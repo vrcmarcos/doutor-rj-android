@@ -23,13 +23,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.mcardoso.doutorrj.R;
+import com.mcardoso.doutorrj.helper.RequestHelper;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
 import com.mcardoso.doutorrj.model.location.Leg;
 import com.mcardoso.doutorrj.model.location.Property;
 import com.mcardoso.doutorrj.model.location.Step;
 import com.mcardoso.doutorrj.response.GoogleMapsDirectionsResponse;
-import com.mcardoso.doutorrj.util.BootstrapCustom;
-import com.mcardoso.doutorrj.util.RestRequest;
+import com.mcardoso.doutorrj.helper.BootstrapHelper;
 
 import java.util.List;
 
@@ -107,7 +107,7 @@ public class BestChoiceFragment extends NotifiableFragment {
                 bestChoiceLatLng.longitude
         );
 
-        new RestRequest(mapsUrl, RestRequest.Method.GET, new RestRequest.RestRequestCallback() {
+        new RequestHelper(mapsUrl, RequestHelper.Method.GET, new RequestHelper.RestRequestCallback() {
             @Override
             public void onRequestSuccess(String json) {
                 Log.d(TAG, json);
@@ -149,7 +149,7 @@ public class BestChoiceFragment extends NotifiableFragment {
         this.button.setText(this.getString(R.string.best_choice_go_to));
         this.button.setBootstrapSize(DefaultBootstrapSize.XL);
         this.button.setButtonMode(ButtonMode.REGULAR);
-        this.button.setBootstrapBrand(BootstrapCustom.getBrand());
+        this.button.setBootstrapBrand(BootstrapHelper.getBrand());
         this.button.setRounded(true);
         this.button.setLayoutParams(params);
         this.button.setAlpha(0.9f);

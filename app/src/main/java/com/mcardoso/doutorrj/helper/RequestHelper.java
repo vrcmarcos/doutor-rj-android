@@ -1,4 +1,4 @@
-package com.mcardoso.doutorrj.util;
+package com.mcardoso.doutorrj.helper;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -11,7 +11,7 @@ import java.net.URL;
 /**
  * Created by mcardoso on 12/7/15.
  */
-public class RestRequest extends AsyncTask<String, Void, String> {
+public class RequestHelper extends AsyncTask<String, Void, String> {
 
     public enum Method {
         GET("GET"), POST("POST");
@@ -23,14 +23,14 @@ public class RestRequest extends AsyncTask<String, Void, String> {
         }
     }
 
-    private static String TAG = "RestRequest";
+    private static String TAG = "RequestHelper";
     private static int TIMEOUT_IN_MILLIS = 1000 * 5;
 
     private String url;
     private Method method;
     private RestRequestCallback callback;
 
-    public RestRequest(String url, Method method, RestRequestCallback callback) {
+    public RequestHelper(String url, Method method, RestRequestCallback callback) {
         this.url = url;
         this.method = method;
         this.callback = callback;
