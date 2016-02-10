@@ -3,10 +3,8 @@ package com.mcardoso.doutorrj.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.location.Location;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -14,18 +12,15 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.mcardoso.doutorrj.R;
-import com.mcardoso.doutorrj.model.establishment.Establishment;
 import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
+import com.mcardoso.doutorrj.model.establishment.EstablishmentsPerType;
 import com.mcardoso.doutorrj.response.EstablishmentsPerTypeResponse;
-import com.mcardoso.doutorrj.view.NotifiableFragment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -43,7 +38,8 @@ public class EstablishmentUtils {
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(EstablishmentType.class, new EstablishmentTypeDeserializer())
                 .create();
-        NotifiableFragment.broadcastEstablishmentsPerTypeResponse(this.getCachedResponse());
+        NotifiableData.getInstance().broadcastEstablishmentsPerTypeResponse(
+                this.getCachedResponse().getResults());
         this.update();
     }
 
@@ -96,38 +92,16 @@ public class EstablishmentUtils {
             @Override
             public void onRequestSuccess(String json) {
                 setCachedResponse(json);
-                NotifiableFragment.updateEstablishmentsPerTypeResponse(
-                        gson.fromJson(json, EstablishmentsPerTypeResponse.class));
+                List<EstablishmentsPerType> response = gson.fromJson(
+                        json, EstablishmentsPerTypeResponse.class).getResults();
+                NotifiableData.getInstance().broadcastEstablishmentsPerTypeResponse(response);
             }
 
             @Override
-            public void onRequestFail() {
-                Log.e(TAG, "Request update fail");
+            public void onRequestFail(Exception e) {
+                Log.e(TAG, e.getMessage(), e);
             }
         }).execute();
-    }
-
-    public static void sort(List<Establishment> establishmentList, LatLng latLng) {
-        final Location location = new Location("");
-        location.setLatitude(latLng.latitude);
-        location.setLongitude(latLng.longitude);
-
-        Collections.sort(establishmentList, new Comparator<Establishment>() {
-            @Override
-            public int compare(Establishment lhs, Establishment rhs) {
-                Location location1 = new Location("");
-                location1.setLongitude(Double.parseDouble(lhs.getLongitude()));
-                location1.setLatitude(Double.parseDouble(lhs.getLatitude()));
-                Float distance1 = location.distanceTo(location1);
-
-                Location location2 = new Location("");
-                location2.setLongitude(Double.parseDouble(rhs.getLongitude()));
-                location2.setLatitude(Double.parseDouble(rhs.getLatitude()));
-                Float distance2 = location.distanceTo(location2);
-
-                return Math.round(distance1 - distance2);
-            }
-        });
     }
 
     class EstablishmentTypeDeserializer implements JsonDeserializer<EstablishmentType> {

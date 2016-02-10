@@ -36,8 +36,17 @@ public class RestRequest extends AsyncTask<String, Void, String> {
         this.callback = callback;
     }
 
+    public void sync() {
+        doRequest();
+    }
+
     @Override
     protected String doInBackground(String... params) {
+        doRequest();
+        return null;
+    }
+
+    private void doRequest() {
         HttpURLConnection conn = null;
         try {
             URL url = new URL(this.url);
@@ -47,8 +56,9 @@ public class RestRequest extends AsyncTask<String, Void, String> {
             conn.setRequestProperty("Accept", "application/json");
 
             if (conn.getResponseCode() != 200) {
-                Log.e(TAG, "Failed : HTTP error code : " + conn.getResponseCode());
-                this.callback.onRequestFail();
+                String errorMessage = "Failed : HTTP error code : " + conn.getResponseCode();
+                Log.e(TAG, errorMessage);
+                this.callback.onRequestFail(new Exception(errorMessage));
             } else {
                 BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
                 String output;
@@ -62,7 +72,7 @@ public class RestRequest extends AsyncTask<String, Void, String> {
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
-            this.callback.onRequestFail();
+            this.callback.onRequestFail(e);
         } finally {
             if (conn != null) {
                 try {
@@ -72,12 +82,10 @@ public class RestRequest extends AsyncTask<String, Void, String> {
                 }
             }
         }
-
-        return null;
     }
 
     public interface RestRequestCallback {
         void onRequestSuccess(String json);
-        void onRequestFail();
+        void onRequestFail(Exception e);
     }
 }

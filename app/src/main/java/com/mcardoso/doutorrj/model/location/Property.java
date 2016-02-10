@@ -1,7 +1,7 @@
 package com.mcardoso.doutorrj.model.location;
 
 /**
- * Created by mcardoso on 1/3/16.
+ * Created by mcardoso on 1/7/16.
  */
 public class Property {
 

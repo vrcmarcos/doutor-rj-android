@@ -19,14 +19,13 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.mcardoso.doutorrj.MainActivity;
 import com.mcardoso.doutorrj.R;
-import com.mcardoso.doutorrj.view.NotifiableFragment;
 
 /**
  * Created by mcardoso on 12/13/15.
  */
 public class LocationTracker extends Service {
 
-    private static final int MAX_SCHEDULE_RETRIES = 3;
+    private static final int MAX_SCHEDULE_RETRIES = 0;
     private static final int SCHEDULE_DELAY_IN_SECONDS = 2;
     private static final int BROADCAST_LATLNG_DELAY_IN_SECONDS = 1;
 
@@ -99,19 +98,7 @@ public class LocationTracker extends Service {
                             this.showLocationNotDefinedDialog();
                         }
                     } else {
-                        Log.d(TAG, "READY! " + this.lastKnowLocation);
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                ((MainActivity) ctx).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        NotifiableFragment.broadcastLocation(lastKnowLocation);
-                                    }
-                                });
-                            }
-                        }, 1000 * BROADCAST_LATLNG_DELAY_IN_SECONDS);
+                        this.broadcastData();
                     }
                 } else {
                     Log.d(TAG, "Show alert");
@@ -121,6 +108,23 @@ public class LocationTracker extends Service {
                 this.schedule();
             }
         }
+    }
+
+    private void broadcastData() {
+
+        Log.d(TAG, "READY! " + this.lastKnowLocation);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ((MainActivity) ctx).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        NotifiableData.getInstance().broadcastLocation(lastKnowLocation);
+                    }
+                });
+            }
+        }, 1000 * BROADCAST_LATLNG_DELAY_IN_SECONDS);
     }
 
     private void showGPSOffDialog() {
@@ -152,6 +156,14 @@ public class LocationTracker extends Service {
                                 schedule();
                             }
                         })
+                .setNegativeButton("Usar o hack", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        lastKnowLocation = new Location("");
+                        lastKnowLocation.setLatitude(-22.95);
+                        lastKnowLocation.setLongitude(-43.);
+                    }
+                })
                 .create();
         this.dialog.show();
     }

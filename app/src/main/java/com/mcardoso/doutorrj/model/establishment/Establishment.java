@@ -1,14 +1,11 @@
 package com.mcardoso.doutorrj.model.establishment;
 
-import android.location.Location;
-
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by mcardoso on 12/7/15.
  */
-public class Establishment {
+public class Establishment implements Comparable<Establishment>{
 
     @SerializedName("nome")
     String name;
@@ -49,6 +46,10 @@ public class Establishment {
 
     @SerializedName("tipo_da_unidade")
     String establishmentType;
+
+    Float distance;
+
+    Integer duration;
 
     public String getName() {
         return name;
@@ -138,6 +139,14 @@ public class Establishment {
         this.email = email;
     }
 
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
+
     public String getLatitude() {
         return latitude;
     }
@@ -162,22 +171,25 @@ public class Establishment {
         this.establishmentType = establishmentType;
     }
 
-    public String getKind() {
-        return kind;
+    public Float getDistance() {
+        return distance;
     }
 
-    public void setKind(String kind) {
-        this.kind = kind;
+    public void setDistance(Float distance) {
+        this.distance = distance;
     }
 
-    public Location getLocation() {
-        Location location = new Location("");
-        location.setLatitude(Double.parseDouble(getLatitude()));
-        location.setLongitude(Double.parseDouble(getLongitude()));
-        return location;
+    public Integer getDuration() {
+        return duration;
     }
 
-    public LatLng getLatLng() {
-        return new LatLng( Double.parseDouble(this.getLatitude()), Double.parseDouble(this.getLongitude()));
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    @Override
+    public int compareTo(Establishment another) {
+
+        return this.duration - another.getDuration();
     }
 }

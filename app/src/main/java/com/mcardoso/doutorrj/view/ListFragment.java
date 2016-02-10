@@ -32,10 +32,15 @@ public class ListFragment extends NotifiableFragment {
 
     @Override
     public void draw() {
-        ListView listView = (ListView) this.view.findViewById(R.id.listView);
-        listView.setAdapter(
-                new CustomListAdapter(savedInstanceState, super.getCurrentList())
-        );
+//        ListView listView = (ListView) this.view.findViewById(R.id.listView);
+//        listView.setAdapter(
+//                new CustomListAdapter(savedInstanceState, super.getCurrentList())
+//        );
+    }
+
+    @Override
+    protected void onCurrentListReceived(List<Establishment> currentList) {
+
     }
 
     class CustomListAdapter extends BaseAdapter {
@@ -71,18 +76,18 @@ public class ListFragment extends NotifiableFragment {
                 convertView = inflater.inflate(R.layout.list_row, null);
             }
 
-            Establishment establishment = this.establishments.get(position);
-
-            ((TextView)convertView.findViewById(R.id.row_title)).setText(establishment.getName());
-
-            Float distanceInMeters = LOCATION.distanceTo(establishment.getLocation());
-            String formattedDistance;
-            if (distanceInMeters > 1000f) {
-                formattedDistance = String.format("%.2fkm", distanceInMeters/1000f);
-            } else {
-                formattedDistance = String.format("%.0fm", distanceInMeters);
-            }
-            ((TextView)convertView.findViewById(R.id.row_distance)).setText(formattedDistance);
+//            Establishment establishment = this.establishments.get(position);
+//
+//            ((TextView)convertView.findViewById(R.id.row_title)).setText(establishment.getName());
+//
+//            Float distanceInMeters = LOCATION.distanceTo(establishment.getLocation());
+//            String formattedDistance;
+//            if (distanceInMeters > 1000f) {
+//                formattedDistance = String.format("%.2fkm", distanceInMeters/1000f);
+//            } else {
+//                formattedDistance = String.format("%.0fm", distanceInMeters);
+//            }
+//            ((TextView)convertView.findViewById(R.id.row_distance)).setText(formattedDistance);
 
             return convertView;
         }

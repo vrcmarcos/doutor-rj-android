@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,18 +17,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
-import com.mcardoso.doutorrj.model.location.Leg;
-import com.mcardoso.doutorrj.model.location.Property;
-import com.mcardoso.doutorrj.model.location.Step;
-import com.mcardoso.doutorrj.response.GoogleMapsDirectionsResponse;
 import com.mcardoso.doutorrj.util.BootstrapCustom;
-import com.mcardoso.doutorrj.util.RestRequest;
 
 import java.util.List;
 
@@ -40,6 +32,7 @@ public class BestChoiceFragment extends NotifiableFragment {
 
     private static String TAG = "BestChoiceFragment";
     private static int DEFAULT_ZOOM = 12;
+    private static int MARKER_PADDING = 200;
     private static LatLng LAT_LNG_DEFAULT_CITY = new LatLng(-22.95,-43.2);
 
     private MapView mapView;
@@ -80,56 +73,88 @@ public class BestChoiceFragment extends NotifiableFragment {
     public void draw() {
         this.map.clear();
         this.tagBoard.removeAllViews();
-        Establishment bestChoice = super.getCurrentList().get(0);
-        LatLng bestChoiceLatLng = bestChoice.getLatLng();
-        final Marker marker = this.map.addMarker(
-                new MarkerOptions()
-                        .title(bestChoice.getName())
-                        .position(bestChoiceLatLng)
-        );
-        this.map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                if (!marker.isInfoWindowShown()) {
-                    marker.showInfoWindow();
-                }
-            }
-        });
-        this.map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), DEFAULT_ZOOM), 250, null);
-        marker.showInfoWindow();
-        this.createGoToButton(marker.getPosition());
 
-        String mapsUrl = getString(
-                R.string.maps_api_travel_info,
-                LAT_LNG.latitude,
-                LAT_LNG.longitude,
-                bestChoiceLatLng.latitude,
-                bestChoiceLatLng.longitude
-        );
+//        Establishment bestChoice = super.getCurrentList().get(0);
+//        LatLng bestChoiceLatLng = bestChoice.getLatLng();
+//        final Marker marker = this.map.addMarker(
+//                new MarkerOptions()
+//                        .title(bestChoice.getName())
+//                        .position(bestChoiceLatLng)
+//        );
+//        this.map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+//            @Override
+//            public void onMapClick(LatLng latLng) {
+//                if (!marker.isInfoWindowShown()) {
+//                    marker.showInfoWindow();
+//                }
+//            }
+//        });
+//
+//        Double latComp = bestChoiceLatLng.latitude - LAT_LNG.latitude;
+//        Double lngComp = bestChoiceLatLng.longitude - LAT_LNG.longitude;
+//
+//        LatLng complement = new LatLng(bestChoiceLatLng.latitude + latComp,
+//                bestChoiceLatLng.longitude + lngComp);
+//
+//        LatLngBounds bounds = new LatLngBounds.Builder()
+//                .include(marker.getPosition())
+//                .include(LAT_LNG)
+//                .include(complement)
+//                .build();
+//
+//        this.map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, MARKER_PADDING), 1000, null);
+//        marker.showInfoWindow();
+//        this.createGoToButton(marker.getPosition());
+//
+//        List<Establishment> establishments = super.getCurrentList();
+//        StringBuilder formattedLatLng = new StringBuilder();
+//        for ( Establishment es : super.getCurrentList() ) {
+//            formattedLatLng.append(es.getLatitude() + "," + es.getLongitude() + "|");
+//        }
+//
+//        String latLngs = formattedLatLng.toString();
+//        latLngs = latLngs.substring(0, latLngs.length() - 2);
+//
+//        String mapsUrl = getString(
+//                R.string.maps_api_travel_info,
+//                LAT_LNG.latitude,
+//                LAT_LNG.longitude,
+//                latLngs
+//        );
+//
+//        mapsUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?origin=-22.99978157,-43.33069258&destination=-23.0055596,-43.3147587&key=AIzaSyDCcPHpSobZDi-9xrWBr5mznH3pLZEf-Is";
+//
+//        new RestRequest(mapsUrl, RestRequest.Method.GET, new RestRequest.RestRequestCallback() {
+//            @Override
+//            public void onRequestSuccess(String json) {
+//                Log.d(TAG, json);
+//
+////                GoogleMapsDistanceMatrixResponse directions = gson.fromJson(json, GoogleMapsDistanceMatrixResponse.class);
+////                Route route = directions.getRoutes().get(0);
+////                final Bounds bounds = route.getBounds();
+////                Leg leg = route.getLegs().get(0);
+////                final Property duration = leg.getDuration();
+////                final List<Step> steps = leg.getSteps();
+////
+////                getActivity().runOnUiThread(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        addLine(bounds, steps);
+//////                        addTag(duration.getText());
+////                    }
+////                });
+//            }
+//
+//            @Override
+//            public void onRequestFail(Exception e) {
+//                Log.d(TAG, e.getMessage(), e);
+//            }
+//        }).execute();
+    }
 
-        new RestRequest(mapsUrl, RestRequest.Method.GET, new RestRequest.RestRequestCallback() {
-            @Override
-            public void onRequestSuccess(String json) {
-                Log.d(TAG, json);
+    @Override
+    protected void onCurrentListReceived(List<Establishment> currentList) {
 
-                GoogleMapsDirectionsResponse directions = gson.fromJson(json, GoogleMapsDirectionsResponse.class);
-                Leg leg = directions.getRoutes().get(0).getLegs().get(0);
-                final Property duration = leg.getDuration();
-                final List<Step> steps = leg.getSteps();
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        addLine(steps);
-//                        addTag(duration.getText());
-                    }
-                });
-            }
-
-            @Override
-            public void onRequestFail() {
-            }
-        }).execute();
     }
 
     private void createGoToButton(LatLng position) {
@@ -152,7 +177,6 @@ public class BestChoiceFragment extends NotifiableFragment {
         this.button.setBootstrapBrand(BootstrapCustom.getBrand());
         this.button.setRounded(true);
         this.button.setLayoutParams(params);
-        this.button.setAlpha(0.9f);
         this.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,22 +188,20 @@ public class BestChoiceFragment extends NotifiableFragment {
         this.tagBoard.addView(this.button);
     }
 
-    private void addLine(List<Step> steps) {
-        PolylineOptions rectLine = new PolylineOptions();
-
-        for (Step step : steps) {
-            rectLine.add(step.getStartLocation().getLatLng());
-            for(LatLng latLng : step.getPolyline().getDecodedPolyline()) {
-                rectLine.add(latLng);
-            }
-            rectLine.add(step.getEndLocation().getLatLng());
-        }
-
-        rectLine.width(30).color(this.getResources().getColor(R.color.polylineBorder));
-        this.map.addPolyline(rectLine);
-        rectLine.width(18).color(this.getResources().getColor(R.color.polyline));
-        this.map.addPolyline(rectLine);
-    }
+//    private void addLine(Bounds bounds, List<Step> steps) {
+//        PolylineOptions rectLine = new PolylineOptions();
+//
+//        for (Step step : steps) {
+//            rectLine.add(step.getStartLocation().getLatLng());
+//            rectLine.addAll(step.getPolyline().getDecodedPolyline());
+//            rectLine.add(step.getEndLocation().getLatLng());
+//        }
+//
+//        rectLine.width(30).color(this.getResources().getColor(R.color.polylineBorder));
+//        this.map.addPolyline(rectLine);
+//        rectLine.width(18).color(this.getResources().getColor(R.color.polyline));
+//        this.map.addPolyline(rectLine);
+//    }
 
     @Override
     public void onResume() {

@@ -21,9 +21,9 @@ import android.view.MenuItem;
 import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
 import com.mcardoso.doutorrj.util.EstablishmentUtils;
 import com.mcardoso.doutorrj.util.LocationTracker;
+import com.mcardoso.doutorrj.util.NotifiableData;
 import com.mcardoso.doutorrj.view.BestChoiceFragment;
 import com.mcardoso.doutorrj.view.ListFragment;
-import com.mcardoso.doutorrj.view.NotifiableFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         LocationTracker.getInstance().setContext(this);
-
+        NotifiableData.getInstance().registerActivity(this);
         new EstablishmentUtils(this);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         EstablishmentType type = EstablishmentType.getTypeById(item.getItemId());
-        NotifiableFragment.broadcastEstablishmentTypeChange(type);
+        NotifiableData.getInstance().broadcastEstablishmentTypeChange(type);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

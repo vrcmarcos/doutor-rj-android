@@ -1,8 +1,6 @@
 package com.mcardoso.doutorrj.response;
 
-import com.google.gson.annotations.SerializedName;
-import com.mcardoso.doutorrj.model.establishment.Establishment;
-import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
+import com.mcardoso.doutorrj.model.establishment.EstablishmentsPerType;
 
 import java.util.List;
 
@@ -48,29 +46,4 @@ public class EstablishmentsPerTypeResponse {
         this.results = results;
     }
 
-    public class EstablishmentsPerType {
-        @SerializedName("nome")
-        private EstablishmentType type;
-
-        @SerializedName("estabelecimentos")
-        List<Establishment> establishments;
-
-        public EstablishmentType getType() {
-            return type;
-        }
-
-        public void setType(EstablishmentType type) {
-            this.type = type;
-        }
-
-        public List<Establishment> getEstablishments() {
-            return establishments;
-        }
-
-        public void setEstablishments(List<Establishment> establishments) {
-            this.establishments = establishments;
-        }
-    }
 }
-
-
