@@ -111,26 +111,4 @@ public abstract class NotifiableFragment extends Fragment {
             layout.addView(View.inflate(this.view.getContext(), this.getTargetLayoutId(), null));
         }
     }
-
-    protected LatLng getMidPoint(LatLng latLng){
-
-        double lat1 = latLng.latitude;
-        double lon1 = latLng.longitude;
-        double lat2 = LAT_LNG.latitude;
-        double lon2 = LAT_LNG.longitude;
-
-        double dLon = Math.toRadians(lon2 - lon1);
-
-        //convert to radians
-        lat1 = Math.toRadians(lat1);
-        lat2 = Math.toRadians(lat2);
-        lon1 = Math.toRadians(lon1);
-
-        double Bx = Math.cos(lat2) * Math.cos(dLon);
-        double By = Math.cos(lat2) * Math.sin(dLon);
-        double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));
-        double lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
-
-        return new LatLng(Math.toDegrees(lat3), Math.toDegrees(lon3));
-    }
 }
