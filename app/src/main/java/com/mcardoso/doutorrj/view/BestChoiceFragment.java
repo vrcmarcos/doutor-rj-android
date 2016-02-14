@@ -13,23 +13,25 @@ import android.widget.RelativeLayout;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.api.defaults.ButtonMode;
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapSize;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.mcardoso.doutorrj.R;
+import com.mcardoso.doutorrj.helper.BootstrapHelper;
+import com.mcardoso.doutorrj.helper.RequestHelper;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
 import com.mcardoso.doutorrj.model.location.Leg;
 import com.mcardoso.doutorrj.model.location.Property;
 import com.mcardoso.doutorrj.model.location.Step;
 import com.mcardoso.doutorrj.response.GoogleMapsDirectionsResponse;
-import com.mcardoso.doutorrj.util.BootstrapCustom;
-import com.mcardoso.doutorrj.util.RestRequest;
 
 import java.util.List;
 
@@ -95,7 +97,17 @@ public class BestChoiceFragment extends NotifiableFragment {
                 }
             }
         });
-        this.map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), DEFAULT_ZOOM), 250, null);
+
+        Double pivotLatitude = ( 2 * bestChoice.getLatitude() ) - LAT_LNG.latitude;
+        Double pivotLongitude = ( 2 * bestChoice.getLongitude() ) - LAT_LNG.longitude;
+
+        LatLngBounds bounds = new LatLngBounds.Builder()
+                .include(new LatLng(pivotLatitude, pivotLongitude))
+                .include(LAT_LNG)
+                .include(bestChoiceLatLng)
+                .build();
+        CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+        this.map.animateCamera(camUpdate, 250, null);
         marker.showInfoWindow();
         this.createGoToButton(marker.getPosition());
 
@@ -107,7 +119,7 @@ public class BestChoiceFragment extends NotifiableFragment {
                 bestChoiceLatLng.longitude
         );
 
-        new RestRequest(mapsUrl, RestRequest.Method.GET, new RestRequest.RestRequestCallback() {
+        new RequestHelper(mapsUrl, RequestHelper.Method.GET, new RequestHelper.RestRequestCallback() {
             @Override
             public void onRequestSuccess(String json) {
                 Log.d(TAG, json);
@@ -149,7 +161,7 @@ public class BestChoiceFragment extends NotifiableFragment {
         this.button.setText(this.getString(R.string.best_choice_go_to));
         this.button.setBootstrapSize(DefaultBootstrapSize.XL);
         this.button.setButtonMode(ButtonMode.REGULAR);
-        this.button.setBootstrapBrand(BootstrapCustom.getBrand());
+        this.button.setBootstrapBrand(BootstrapHelper.getBrand());
         this.button.setRounded(true);
         this.button.setLayoutParams(params);
         this.button.setAlpha(0.9f);

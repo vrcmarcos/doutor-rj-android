@@ -18,9 +18,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mcardoso.doutorrj.helper.EstablishmentHelper;
+import com.mcardoso.doutorrj.helper.LocationHelper;
 import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
-import com.mcardoso.doutorrj.util.EstablishmentUtils;
-import com.mcardoso.doutorrj.util.LocationTracker;
 import com.mcardoso.doutorrj.view.BestChoiceFragment;
 import com.mcardoso.doutorrj.view.ListFragment;
 import com.mcardoso.doutorrj.view.NotifiableFragment;
@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LocationTracker.getInstance().setContext(this);
+        LocationHelper.getInstance().setContext(this);
 
-        new EstablishmentUtils(this);
+        new EstablishmentHelper(this);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        LocationTracker.getInstance().onResume();
+        LocationHelper.getInstance().onResume();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if( hasPermission(permissions[0]) ) {
-            LocationTracker.getInstance().setup();
+            LocationHelper.getInstance().setup();
         }
     }
 
