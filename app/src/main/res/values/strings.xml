@@ -9,6 +9,7 @@
     <!-- Best Choice Fragment -->
     <string name="best_choice_title">Melhor escolha</string>
     <string name="best_choice_go_to">Traçar rota</string>
+    <string name="request_uber">Solicitar Uber</string>
 
     <!-- List Fragment -->
     <string name="list_title">Todas as opções</string>

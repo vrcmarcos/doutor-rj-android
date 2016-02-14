@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.beardedhen.androidbootstrap.api.defaults.ButtonMode;
-import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapSize;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,6 +30,8 @@ import com.mcardoso.doutorrj.model.location.Leg;
 import com.mcardoso.doutorrj.model.location.Property;
 import com.mcardoso.doutorrj.model.location.Step;
 import com.mcardoso.doutorrj.response.GoogleMapsDirectionsResponse;
+import com.uber.sdk.android.rides.RequestButton;
+import com.uber.sdk.android.rides.RideParameters;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class BestChoiceFragment extends NotifiableFragment {
 
     private MapView mapView;
     private GoogleMap map;
-    private RelativeLayout tagBoard;
+    private RelativeLayout dashboard;
     private Gson gson;
     private BootstrapButton button;
 
@@ -64,7 +64,7 @@ public class BestChoiceFragment extends NotifiableFragment {
 
         MapsInitializer.initialize(this.getActivity());
         this.map.animateCamera(CameraUpdateFactory.newLatLngZoom(LAT_LNG_DEFAULT_CITY, DEFAULT_ZOOM));
-        this.tagBoard = (RelativeLayout) view.findViewById(R.id.tag_board);
+        this.dashboard = (RelativeLayout) view.findViewById(R.id.dashboard);
         return view;
     }
 
@@ -81,7 +81,7 @@ public class BestChoiceFragment extends NotifiableFragment {
     @Override
     public void draw() {
         this.map.clear();
-        this.tagBoard.removeAllViews();
+//        this.dashboard.removeAllViews();
         Establishment bestChoice = super.getCurrentList().get(0);
         LatLng bestChoiceLatLng = bestChoice.getLatLng();
         final Marker marker = this.map.addMarker(
@@ -109,7 +109,7 @@ public class BestChoiceFragment extends NotifiableFragment {
         CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 50);
         this.map.animateCamera(camUpdate, 250, null);
         marker.showInfoWindow();
-        this.createGoToButton(marker.getPosition());
+        this.updateDashboard(marker.getPosition());
 
         String mapsUrl = getString(
                 R.string.maps_api_travel_info,
@@ -144,28 +144,17 @@ public class BestChoiceFragment extends NotifiableFragment {
         }).execute();
     }
 
-    private void createGoToButton(LatLng position) {
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, 0, 0, 30);
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+    private void updateDashboard(LatLng position) {
 
         final String goToURL = getString(R.string.maps_api_go_to,
                 position.latitude,
                 position.longitude
         );
 
-        this.button = new BootstrapButton(this.getContext());
-        this.button.setText(this.getString(R.string.best_choice_go_to));
-        this.button.setBootstrapSize(DefaultBootstrapSize.XL);
-        this.button.setButtonMode(ButtonMode.REGULAR);
-        this.button.setBootstrapBrand(BootstrapHelper.getBrand());
-        this.button.setRounded(true);
-        this.button.setLayoutParams(params);
-        this.button.setAlpha(0.9f);
-        this.button.setOnClickListener(new View.OnClickListener() {
+        BootstrapButton goToButton = (BootstrapButton) this.dashboard.findViewById(R.id.button_go_to);
+        goToButton.setVisibility(View.VISIBLE);
+        goToButton.setBootstrapBrand(BootstrapHelper.getBrand());
+        goToButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(goToURL));
@@ -173,7 +162,13 @@ public class BestChoiceFragment extends NotifiableFragment {
             }
         });
 
-        this.tagBoard.addView(this.button);
+        RequestButton requestUberButton = (RequestButton) this.dashboard.findViewById(R.id.button_request_uber);
+        RideParameters rideParams = new RideParameters.Builder()
+                .setPickupLocation((float)LAT_LNG.latitude, (float)LAT_LNG.longitude, "", "")
+                .setDropoffLocation((float)position.latitude, (float)position.longitude, "", "")
+                .build();
+        requestUberButton.setRideParameters(rideParams);
+        requestUberButton.setVisibility(View.VISIBLE);
     }
 
     private void addLine(List<Step> steps) {

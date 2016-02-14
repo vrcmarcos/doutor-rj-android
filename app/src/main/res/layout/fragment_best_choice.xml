@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_best_choice">
@@ -10,8 +12,41 @@
         android:layout_height="fill_parent" />
 
     <RelativeLayout
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/tag_board"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/dashboard"
+        android:layout_centerHorizontal="true">
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/best_choice_go_to"
+            app:bootstrapSize="xl"
+            app:buttonMode="regular"
+            app:roundedCorners="true"
+            android:alpha="0.9"
+            android:id="@+id/button_go_to"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_margin="30dp"
+            android:visibility="invisible" />
+
+        <com.uber.sdk.android.rides.RequestButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/request_uber"
+            android:alpha="0.9"
+            app:client_id="@string/uber_client_id"
+            app:style="white"
+            android:id="@+id/button_request_uber"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="30dp"
+            android:visibility="invisible" />
+    </RelativeLayout>
 
 </RelativeLayout>
