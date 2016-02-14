@@ -7,7 +7,7 @@
     <string name="action_settings">Settings</string>
 
     <!-- Best Choice Fragment -->
-    <string name="best_choice_title">Melhor escolha</string>
+    <string name="best_choice_title">Mais próximo</string>
     <string name="best_choice_go_to">Traçar rota</string>
     <string name="request_uber">Chamar Uber</string>
 
@@ -15,6 +15,9 @@
     <string name="list_title">Todas as opções</string>
     <string name="type_public">Público</string>
     <string name="type_private">Privado</string>
+
+    <!-- User Choice -->
+    <string name="user_choice_title">Escolha do Usuário</string>
 
     <!-- GPS Dialog -->
     <string name="gps_off_dialog_title">O GPS está desligado!</string>

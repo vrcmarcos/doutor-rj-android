@@ -75,7 +75,7 @@ public abstract class NotifiableFragment extends Fragment {
         checkConditions();
     }
 
-    private static void checkConditions() {
+    protected static void checkConditions() {
         if ( ESTABLISHMENTS_PER_TYPE_RESPONSE != null && LOCATION != null ) {
 
             if ( !ESTABLISHMENTS_LIST_SORTED ) {

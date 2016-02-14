@@ -24,6 +24,7 @@ import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
 import com.mcardoso.doutorrj.view.BestChoiceFragment;
 import com.mcardoso.doutorrj.view.ListFragment;
 import com.mcardoso.doutorrj.view.NotifiableFragment;
+import com.mcardoso.doutorrj.view.UserChoiceFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -139,6 +140,9 @@ public class MainActivity extends AppCompatActivity
                 case 1:
                     fragment = new ListFragment();
                     break;
+                case 2:
+                    fragment = new UserChoiceFragment();
+                    break;
                 default:
                     fragment = new BestChoiceFragment();
                     break;
@@ -149,7 +153,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -159,6 +163,9 @@ public class MainActivity extends AppCompatActivity
             switch (position) {
                 case 1:
                     resourceId = R.string.list_title;
+                    break;
+                case 2:
+                    resourceId = R.string.user_choice_title;
                     break;
                 default:
                     resourceId = R.string.best_choice_title;

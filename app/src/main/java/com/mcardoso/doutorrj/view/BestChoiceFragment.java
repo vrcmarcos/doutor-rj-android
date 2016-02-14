@@ -59,6 +59,12 @@ public class BestChoiceFragment extends NotifiableFragment {
         this.map.setMyLocationEnabled(true);
         this.map.getUiSettings().setMapToolbarEnabled(false);
         this.map.getUiSettings().setMyLocationButtonEnabled(false);
+        this.map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                checkConditions();
+            }
+        });
 
         MapsInitializer.initialize(this.getActivity());
         this.map.animateCamera(CameraUpdateFactory.newLatLngZoom(LAT_LNG_DEFAULT_CITY, DEFAULT_ZOOM));
