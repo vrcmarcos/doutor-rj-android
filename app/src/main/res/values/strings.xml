@@ -13,6 +13,8 @@
 
     <!-- List Fragment -->
     <string name="list_title">Todas as opções</string>
+    <string name="type_public">Público</string>
+    <string name="type_private">Privado</string>
 
     <!-- GPS Dialog -->
     <string name="gps_off_dialog_title">O GPS está desligado!</string>
