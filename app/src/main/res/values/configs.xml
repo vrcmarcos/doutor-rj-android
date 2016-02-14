@@ -4,4 +4,5 @@
     <string name="server_key">AIzaSyCzmdy8LRq0T4GaHarg-jmt7MKtpa7VVMg</string>
     <string name="shared_preferences_key">7eZgezx8nANh2a3nB6sa5Duf</string>
     <string name="shared_preferences_establishments">4tKHgfdBQHbNhz8YLPAyLWL4</string>
+    <string name="uber_client_id">cziQGEsvHyW64FO7yV1YxbY7bTa3hMou</string>
 </resources>

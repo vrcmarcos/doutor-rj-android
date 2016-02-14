@@ -1,6 +1,7 @@
 package com.mcardoso.doutorrj.view;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.beardedhen.androidbootstrap.api.defaults.ButtonMode;
-import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapSize;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,9 +45,8 @@ public class BestChoiceFragment extends NotifiableFragment {
 
     private MapView mapView;
     private GoogleMap map;
-    private RelativeLayout tagBoard;
+    private RelativeLayout dashboard;
     private Gson gson;
-    private BootstrapButton button;
 
     @Nullable
     @Override
@@ -64,7 +62,7 @@ public class BestChoiceFragment extends NotifiableFragment {
 
         MapsInitializer.initialize(this.getActivity());
         this.map.animateCamera(CameraUpdateFactory.newLatLngZoom(LAT_LNG_DEFAULT_CITY, DEFAULT_ZOOM));
-        this.tagBoard = (RelativeLayout) view.findViewById(R.id.tag_board);
+        this.dashboard = (RelativeLayout) view.findViewById(R.id.dashboard);
         return view;
     }
 
@@ -81,7 +79,6 @@ public class BestChoiceFragment extends NotifiableFragment {
     @Override
     public void draw() {
         this.map.clear();
-        this.tagBoard.removeAllViews();
         Establishment bestChoice = super.getCurrentList().get(0);
         LatLng bestChoiceLatLng = bestChoice.getLatLng();
         final Marker marker = this.map.addMarker(
@@ -109,7 +106,7 @@ public class BestChoiceFragment extends NotifiableFragment {
         CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 50);
         this.map.animateCamera(camUpdate, 250, null);
         marker.showInfoWindow();
-        this.createGoToButton(marker.getPosition());
+        this.updateDashboard(marker.getPosition());
 
         String mapsUrl = getString(
                 R.string.maps_api_travel_info,
@@ -144,28 +141,17 @@ public class BestChoiceFragment extends NotifiableFragment {
         }).execute();
     }
 
-    private void createGoToButton(LatLng position) {
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, 0, 0, 30);
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+    private void updateDashboard(final LatLng position) {
 
         final String goToURL = getString(R.string.maps_api_go_to,
                 position.latitude,
                 position.longitude
         );
 
-        this.button = new BootstrapButton(this.getContext());
-        this.button.setText(this.getString(R.string.best_choice_go_to));
-        this.button.setBootstrapSize(DefaultBootstrapSize.XL);
-        this.button.setButtonMode(ButtonMode.REGULAR);
-        this.button.setBootstrapBrand(BootstrapHelper.getBrand());
-        this.button.setRounded(true);
-        this.button.setLayoutParams(params);
-        this.button.setAlpha(0.9f);
-        this.button.setOnClickListener(new View.OnClickListener() {
+        BootstrapButton goToButton = (BootstrapButton) this.dashboard.findViewById(R.id.button_go_to);
+        goToButton.setVisibility(View.VISIBLE);
+        goToButton.setBootstrapBrand(BootstrapHelper.getGreenBrand());
+        goToButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(goToURL));
@@ -173,7 +159,35 @@ public class BestChoiceFragment extends NotifiableFragment {
             }
         });
 
-        this.tagBoard.addView(this.button);
+        BootstrapButton requestUberButton = (BootstrapButton) this.dashboard.findViewById(R.id.button_request_uber);
+        requestUberButton.setVisibility(View.VISIBLE);
+        requestUberButton.setBootstrapBrand(BootstrapHelper.getYellowBrand());
+        requestUberButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    PackageManager pm = getContext().getPackageManager();
+                    pm.getPackageInfo("com.ubercab", PackageManager.GET_ACTIVITIES);
+                    String uri = getString(
+                            R.string.uber_deep_linking_url,
+                            R.string.uber_client_id,
+                            position.latitude,
+                            position.longitude
+                    );
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(uri));
+                    startActivity(intent);
+                } catch (PackageManager.NameNotFoundException e) {
+                    String url = getString(
+                            R.string.uber_mobile_website,
+                            R.string.uber_client_id
+                    );
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }
+            }
+        });
     }
 
     private void addLine(List<Step> steps) {

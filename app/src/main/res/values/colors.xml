@@ -3,8 +3,10 @@
     <color name="colorPrimaryDark">#FF44964B</color>
     <color name="colorPrimary">#FF4CAF50</color>
     <color name="colorAccent">#FF4CAF50</color>
-    <color name="bootstrapColor">#FF078903</color>
-    <color name="bootstrapTextColor">#FFFFFFFF</color>
+    <color name="bootstrapGreenButtonBackgroundColor">#FF078903</color>
+    <color name="bootstrapGreenButtonTextColor">#FFFFFFFF</color>
+    <color name="bootstrapYellowButtonBackgroundColor">#FFFFAB00</color>
+    <color name="bootstrapYellowButtonTextColor">#FF424242</color>
     <color name="polyline">#FF4396FD</color>
     <color name="polylineBorder">#FF3062D0</color>
 </resources>

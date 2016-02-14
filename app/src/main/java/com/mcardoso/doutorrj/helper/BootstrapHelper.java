@@ -19,15 +19,22 @@ import static com.beardedhen.androidbootstrap.utils.ColorUtils.resolveColor;
  */
 public class BootstrapHelper {
 
-    private static Brand BRAND;
+    private static Brand BRAND_GREEN;
+    private static Brand BRAND_YELLOW;
 
-    public static BootstrapBrand getBrand() {
-        if (BRAND == null ) {
-            BRAND = new Brand(R.color.bootstrapColor, R.color.bootstrapTextColor);
+    public static BootstrapBrand getGreenBrand() {
+        if (BRAND_GREEN == null ) {
+            BRAND_GREEN = new Brand(R.color.bootstrapGreenButtonBackgroundColor, R.color.bootstrapGreenButtonTextColor);
         }
-        return BRAND;
+        return BRAND_GREEN;
     }
 
+    public static BootstrapBrand getYellowBrand() {
+        if (BRAND_YELLOW == null ) {
+            BRAND_YELLOW = new Brand(R.color.bootstrapYellowButtonBackgroundColor, R.color.bootstrapYellowButtonTextColor);
+        }
+        return BRAND_YELLOW;
+    }
 
     private static class Brand implements BootstrapBrand {
 
