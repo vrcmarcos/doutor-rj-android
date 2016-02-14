@@ -98,11 +98,15 @@ public class BestChoiceFragment extends NotifiableFragment {
             }
         });
 
+        Double pivotLatitude = ( 2 * bestChoice.getLatitude() ) - LAT_LNG.latitude;
+        Double pivotLongitude = ( 2 * bestChoice.getLongitude() ) - LAT_LNG.longitude;
+
         LatLngBounds bounds = new LatLngBounds.Builder()
+                .include(new LatLng(pivotLatitude, pivotLongitude))
                 .include(LAT_LNG)
                 .include(bestChoiceLatLng)
                 .build();
-        CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 20, 20, 5);
+        CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 50);
         this.map.animateCamera(camUpdate, 250, null);
         marker.showInfoWindow();
         this.createGoToButton(marker.getPosition());
