@@ -20,14 +20,18 @@ import android.view.MenuItem;
 
 import com.mcardoso.doutorrj.helper.EstablishmentHelper;
 import com.mcardoso.doutorrj.helper.LocationHelper;
+import com.mcardoso.doutorrj.model.establishment.Establishment;
 import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
 import com.mcardoso.doutorrj.view.BestChoiceFragment;
 import com.mcardoso.doutorrj.view.ListFragment;
 import com.mcardoso.doutorrj.view.NotifiableFragment;
-import com.mcardoso.doutorrj.view.UserChoiceFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ListFragment.EstablishmentListCallback {
+
+    private CustomPageAdapter pageAdapter;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +54,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        CustomPageAdapter pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setAdapter(pageAdapter);
+        this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
+        this.viewPager = (ViewPager) findViewById(R.id.pager);
+        this.viewPager.setAdapter(this.pageAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setupWithViewPager(this.viewPager);
     }
 
     @Override
@@ -126,10 +130,32 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void userSelected(Establishment establishment, Boolean isBestChoice) {
+        Integer mapFragmentPosition = 0;
+        this.pageAdapter.setBestChoiceSelected(isBestChoice);
+        this.viewPager.setCurrentItem(mapFragmentPosition);
+        BestChoiceFragment mapFragment = (BestChoiceFragment) getSupportFragmentManager().findFragmentByTag(
+                "android:switcher:" + this.viewPager.getId() + ":" + this.pageAdapter.getItemId(mapFragmentPosition)
+        );
+        this.pageAdapter.notifyDataSetChanged();
+        mapFragment.update(establishment);
+    }
+
+
     class CustomPageAdapter extends FragmentPagerAdapter {
+
+        private boolean bestChoiceSelected;
 
         public CustomPageAdapter(FragmentManager fm) {
             super(fm);
+            this.bestChoiceSelected = true;
+        }
+
+        public void setBestChoiceSelected(Boolean bestChoiceSelected) {
+            if ( bestChoiceSelected != this.bestChoiceSelected ) {
+                this.bestChoiceSelected = bestChoiceSelected;
+            }
         }
 
         @Override
@@ -139,9 +165,6 @@ public class MainActivity extends AppCompatActivity
             switch(position) {
                 case 1:
                     fragment = new ListFragment();
-                    break;
-                case 2:
-                    fragment = new UserChoiceFragment();
                     break;
                 default:
                     fragment = new BestChoiceFragment();
@@ -153,7 +176,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
 
         @Override
@@ -164,11 +187,8 @@ public class MainActivity extends AppCompatActivity
                 case 1:
                     resourceId = R.string.list_title;
                     break;
-                case 2:
-                    resourceId = R.string.user_choice_title;
-                    break;
                 default:
-                    resourceId = R.string.best_choice_title;
+                    resourceId = this.bestChoiceSelected ? R.string.best_choice_title : R.string.user_choice_title;
                     break;
             }
             return getResources().getString(resourceId);

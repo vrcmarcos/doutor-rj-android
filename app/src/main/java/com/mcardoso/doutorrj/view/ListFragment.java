@@ -1,5 +1,6 @@
 package com.mcardoso.doutorrj.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import java.util.List;
 public class ListFragment extends NotifiableFragment {
 
     private static String TAG = "ListFragment";
+    private EstablishmentListCallback callback;
 
     @Override
     protected boolean useLoadingScreen() {
@@ -42,8 +44,16 @@ public class ListFragment extends NotifiableFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "Testing");
+                Boolean isBestChoice = position == 0;
+                callback.userSelected((Establishment) parent.getItemAtPosition(position), isBestChoice);
             }
         });
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.callback = (EstablishmentListCallback) activity;
     }
 
     class CustomListAdapter extends ArrayAdapter<Establishment> {
@@ -82,5 +92,9 @@ public class ListFragment extends NotifiableFragment {
 
             return convertView;
         }
+    }
+
+    public interface EstablishmentListCallback {
+        void userSelected(Establishment establishment, Boolean isBestChoice);
     }
 }

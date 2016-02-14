@@ -82,15 +82,26 @@ public class BestChoiceFragment extends NotifiableFragment {
         return R.layout.fragment_best_choice;
     }
 
+    private Establishment getCurrentEstablishment() {
+        return super.getCurrentList().get(0);
+    }
+
+    public void update(Establishment establishment) {
+        this.drawMap(establishment);
+    }
+
     @Override
     public void draw() {
+        this.drawMap(this.getCurrentEstablishment());
+    }
+
+    private void drawMap(Establishment establishment) {
         this.map.clear();
-        Establishment bestChoice = super.getCurrentList().get(0);
-        LatLng bestChoiceLatLng = bestChoice.getLatLng();
+        LatLng establishmentLatLng = establishment.getLatLng();
         final Marker marker = this.map.addMarker(
                 new MarkerOptions()
-                        .title(bestChoice.getName())
-                        .position(bestChoiceLatLng)
+                        .title(establishment.getName())
+                        .position(establishmentLatLng)
         );
         this.map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -101,13 +112,13 @@ public class BestChoiceFragment extends NotifiableFragment {
             }
         });
 
-        Double pivotLatitude = ( 2 * bestChoice.getLatitude() ) - LAT_LNG.latitude;
-        Double pivotLongitude = ( 2 * bestChoice.getLongitude() ) - LAT_LNG.longitude;
+        Double pivotLatitude = ( 2 * establishment.getLatitude() ) - LAT_LNG.latitude;
+        Double pivotLongitude = ( 2 * establishment.getLongitude() ) - LAT_LNG.longitude;
 
         LatLngBounds bounds = new LatLngBounds.Builder()
                 .include(new LatLng(pivotLatitude, pivotLongitude))
                 .include(LAT_LNG)
-                .include(bestChoiceLatLng)
+                .include(establishmentLatLng)
                 .build();
         CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 50);
         this.map.animateCamera(camUpdate, 250, null);
@@ -118,8 +129,8 @@ public class BestChoiceFragment extends NotifiableFragment {
                 R.string.maps_api_travel_info,
                 LAT_LNG.latitude,
                 LAT_LNG.longitude,
-                bestChoiceLatLng.latitude,
-                bestChoiceLatLng.longitude
+                establishmentLatLng.latitude,
+                establishmentLatLng.longitude
         );
 
         new RequestHelper(mapsUrl, RequestHelper.Method.GET, new RequestHelper.RestRequestCallback() {
