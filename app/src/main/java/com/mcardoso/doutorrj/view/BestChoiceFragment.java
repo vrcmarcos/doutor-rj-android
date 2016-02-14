@@ -1,6 +1,7 @@
 package com.mcardoso.doutorrj.view;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,8 +31,6 @@ import com.mcardoso.doutorrj.model.location.Leg;
 import com.mcardoso.doutorrj.model.location.Property;
 import com.mcardoso.doutorrj.model.location.Step;
 import com.mcardoso.doutorrj.response.GoogleMapsDirectionsResponse;
-import com.uber.sdk.android.rides.RequestButton;
-import com.uber.sdk.android.rides.RideParameters;
 
 import java.util.List;
 
@@ -48,7 +47,6 @@ public class BestChoiceFragment extends NotifiableFragment {
     private GoogleMap map;
     private RelativeLayout dashboard;
     private Gson gson;
-    private BootstrapButton button;
 
     @Nullable
     @Override
@@ -81,7 +79,6 @@ public class BestChoiceFragment extends NotifiableFragment {
     @Override
     public void draw() {
         this.map.clear();
-//        this.dashboard.removeAllViews();
         Establishment bestChoice = super.getCurrentList().get(0);
         LatLng bestChoiceLatLng = bestChoice.getLatLng();
         final Marker marker = this.map.addMarker(
@@ -144,7 +141,7 @@ public class BestChoiceFragment extends NotifiableFragment {
         }).execute();
     }
 
-    private void updateDashboard(LatLng position) {
+    private void updateDashboard(final LatLng position) {
 
         final String goToURL = getString(R.string.maps_api_go_to,
                 position.latitude,
@@ -153,7 +150,7 @@ public class BestChoiceFragment extends NotifiableFragment {
 
         BootstrapButton goToButton = (BootstrapButton) this.dashboard.findViewById(R.id.button_go_to);
         goToButton.setVisibility(View.VISIBLE);
-        goToButton.setBootstrapBrand(BootstrapHelper.getBrand());
+        goToButton.setBootstrapBrand(BootstrapHelper.getGreenBrand());
         goToButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,13 +159,35 @@ public class BestChoiceFragment extends NotifiableFragment {
             }
         });
 
-        RequestButton requestUberButton = (RequestButton) this.dashboard.findViewById(R.id.button_request_uber);
-        RideParameters rideParams = new RideParameters.Builder()
-                .setPickupLocation((float)LAT_LNG.latitude, (float)LAT_LNG.longitude, "", "")
-                .setDropoffLocation((float)position.latitude, (float)position.longitude, "", "")
-                .build();
-        requestUberButton.setRideParameters(rideParams);
+        BootstrapButton requestUberButton = (BootstrapButton) this.dashboard.findViewById(R.id.button_request_uber);
         requestUberButton.setVisibility(View.VISIBLE);
+        requestUberButton.setBootstrapBrand(BootstrapHelper.getYellowBrand());
+        requestUberButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    PackageManager pm = getContext().getPackageManager();
+                    pm.getPackageInfo("com.ubercab", PackageManager.GET_ACTIVITIES);
+                    String uri = getString(
+                            R.string.uber_deep_linking_url,
+                            R.string.uber_client_id,
+                            position.latitude,
+                            position.longitude
+                    );
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(uri));
+                    startActivity(intent);
+                } catch (PackageManager.NameNotFoundException e) {
+                    String url = getString(
+                            R.string.uber_mobile_website,
+                            R.string.uber_client_id
+                    );
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }
+            }
+        });
     }
 
     private void addLine(List<Step> steps) {
