@@ -22,7 +22,7 @@ import com.mcardoso.doutorrj.helper.EstablishmentHelper;
 import com.mcardoso.doutorrj.helper.LocationHelper;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
 import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
-import com.mcardoso.doutorrj.view.BestChoiceFragment;
+import com.mcardoso.doutorrj.view.MapFragment;
 import com.mcardoso.doutorrj.view.ListFragment;
 import com.mcardoso.doutorrj.view.NotifiableFragment;
 
@@ -131,31 +131,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void userSelected(Establishment establishment, Boolean isBestChoice) {
+    public void userSelected(Establishment establishment) {
         Integer mapFragmentPosition = 0;
-        this.pageAdapter.setBestChoiceSelected(isBestChoice);
         this.viewPager.setCurrentItem(mapFragmentPosition);
-        BestChoiceFragment mapFragment = (BestChoiceFragment) getSupportFragmentManager().findFragmentByTag(
+        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(
                 "android:switcher:" + this.viewPager.getId() + ":" + this.pageAdapter.getItemId(mapFragmentPosition)
         );
-        this.pageAdapter.notifyDataSetChanged();
         mapFragment.update(establishment);
     }
 
 
     class CustomPageAdapter extends FragmentPagerAdapter {
 
-        private boolean bestChoiceSelected;
-
         public CustomPageAdapter(FragmentManager fm) {
             super(fm);
-            this.bestChoiceSelected = true;
-        }
-
-        public void setBestChoiceSelected(Boolean bestChoiceSelected) {
-            if ( bestChoiceSelected != this.bestChoiceSelected ) {
-                this.bestChoiceSelected = bestChoiceSelected;
-            }
         }
 
         @Override
@@ -167,7 +156,7 @@ public class MainActivity extends AppCompatActivity
                     fragment = new ListFragment();
                     break;
                 default:
-                    fragment = new BestChoiceFragment();
+                    fragment = new MapFragment();
                     break;
             }
 
@@ -179,6 +168,8 @@ public class MainActivity extends AppCompatActivity
             return 2;
         }
 
+
+
         @Override
         public CharSequence getPageTitle(int position) {
             int resourceId;
@@ -188,7 +179,7 @@ public class MainActivity extends AppCompatActivity
                     resourceId = R.string.list_title;
                     break;
                 default:
-                    resourceId = this.bestChoiceSelected ? R.string.best_choice_title : R.string.user_choice_title;
+                    resourceId = R.string.map_title;
                     break;
             }
             return getResources().getString(resourceId);

@@ -2,7 +2,6 @@ package com.mcardoso.doutorrj.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,9 +42,7 @@ public class ListFragment extends NotifiableFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "Testing");
-                Boolean isBestChoice = position == 0;
-                callback.userSelected((Establishment) parent.getItemAtPosition(position), isBestChoice);
+                callback.userSelected((Establishment) parent.getItemAtPosition(position));
             }
         });
     }
@@ -78,7 +75,7 @@ public class ListFragment extends NotifiableFragment {
             String formattedName = WordUtils.capitalizeFully(establishment.getName());
             ((TextView) convertView.findViewById(R.id.row_title)).setText(formattedName);
 
-            Integer typeTextId = establishment.isPrivateEstablishment() ? R.string.type_private : R.string.type_public;
+            Integer typeTextId = establishment.isPrivateEstablishment() ? R.string.list_type_private : R.string.list_type_public;
             ((TextView) convertView.findViewById(R.id.row_type)).setText(typeTextId);
 
             Float distanceInMeters = LOCATION.distanceTo(establishment.getLocation());
@@ -95,6 +92,6 @@ public class ListFragment extends NotifiableFragment {
     }
 
     public interface EstablishmentListCallback {
-        void userSelected(Establishment establishment, Boolean isBestChoice);
+        void userSelected(Establishment establishment);
     }
 }

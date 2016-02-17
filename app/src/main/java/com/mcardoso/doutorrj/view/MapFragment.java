@@ -37,9 +37,9 @@ import java.util.List;
 /**
  * Created by mcardoso on 12/8/15.
  */
-public class BestChoiceFragment extends NotifiableFragment {
+public class MapFragment extends NotifiableFragment {
 
-    private static String TAG = "BestChoiceFragment";
+    private static String TAG = "MapFragment";
     private static int DEFAULT_ZOOM = 12;
     private static LatLng LAT_LNG_DEFAULT_CITY = new LatLng(-22.95,-43.2);
 
@@ -79,7 +79,7 @@ public class BestChoiceFragment extends NotifiableFragment {
 
     @Override
     protected Integer getTargetLayoutId() {
-        return R.layout.fragment_best_choice;
+        return R.layout.fragment_map;
     }
 
     private Establishment getCurrentEstablishment() {
@@ -167,7 +167,7 @@ public class BestChoiceFragment extends NotifiableFragment {
 
         BootstrapButton goToButton = (BootstrapButton) this.dashboard.findViewById(R.id.button_go_to);
         goToButton.setVisibility(View.VISIBLE);
-        goToButton.setBootstrapBrand(BootstrapHelper.getGreenBrand());
+        goToButton.setBootstrapBrand(BootstrapHelper.getGoToBrand());
         goToButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,7 +178,7 @@ public class BestChoiceFragment extends NotifiableFragment {
 
         BootstrapButton requestUberButton = (BootstrapButton) this.dashboard.findViewById(R.id.button_request_uber);
         requestUberButton.setVisibility(View.VISIBLE);
-        requestUberButton.setBootstrapBrand(BootstrapHelper.getYellowBrand());
+        requestUberButton.setBootstrapBrand(BootstrapHelper.getUberBrand());
         requestUberButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,9 +218,9 @@ public class BestChoiceFragment extends NotifiableFragment {
             rectLine.add(step.getEndLocation().getLatLng());
         }
 
-        rectLine.width(30).color(this.getResources().getColor(R.color.polylineBorder));
+        rectLine.width(30).color(this.getResources().getColor(R.color.mapPolylineBorder));
         this.map.addPolyline(rectLine);
-        rectLine.width(18).color(this.getResources().getColor(R.color.polyline));
+        rectLine.width(18).color(this.getResources().getColor(R.color.mapPolyline));
         this.map.addPolyline(rectLine);
     }
 

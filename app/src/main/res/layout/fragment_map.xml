@@ -30,7 +30,7 @@
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/best_choice_go_to"
+            android:text="@string/map_go_to"
             app:bootstrapSize="xl"
             app:buttonMode="regular"
             app:roundedCorners="true"
@@ -48,7 +48,7 @@
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/request_uber"
+            android:text="@string/map_request_uber"
             app:bootstrapSize="xl"
             app:buttonMode="regular"
             app:roundedCorners="true"
