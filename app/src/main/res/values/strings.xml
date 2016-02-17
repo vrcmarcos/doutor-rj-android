@@ -6,9 +6,29 @@
 
     <string name="action_settings">Settings</string>
 
-    <string name="favorite_title">Melhor escolha</string>
-    <string name="list_title">Todas as opções</string>
+    <!-- Best Choice Fragment -->
+    <string name="map_title">Mapa</string>
+    <string name="map_go_to">Traçar rota</string>
+    <string name="map_request_uber">Chamar Uber</string>
 
-    <!-- URL -->
-    <string name="api_all_establishments">http://192.168.25.14:8000/estabelecimentos.json</string>
+    <!-- List Fragment -->
+    <string name="list_title">Todas as opções</string>
+    <string name="list_type_public">Público</string>
+    <string name="list_type_private">Privado</string>
+
+    <!-- GPS Dialog -->
+    <string name="gps_off_dialog_title">O GPS está desligado!</string>
+    <string name="gps_off_dialog_text">Para usar o aplicativo, você deve ligar o GPS.</string>
+    <string name="gps_off_dialog_positive_button">Ligar o GPS</string>
+
+    <!-- Location Not Defined Dialog -->
+    <string name="location_not_defined_dialog_title">Não foi possível capturar sua posição.</string>
+    <string name="location_not_defined_dialog_text">Não conseguimos descobrir sua posição atual.</string>
+    <string name="location_not_defined_dialog_positive_button">Tentar Novamente</string>
+
+    <!-- Menu -->
+    <string name="menu_hospital">Hospital Geral</string>
+    <string name="menu_secretaria_saude">Secretaria de Saúde</string>
+    <string name="menu_policlina">Policlínica</string>
+    <string name="menu_config">Configurações</string>
 </resources>

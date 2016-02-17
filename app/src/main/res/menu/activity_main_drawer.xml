@@ -2,22 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_camara" android:icon="@android:drawable/ic_menu_camera"
-            android:title="Import" />
-        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item android:id="@+id/nav_slideshow" android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item android:id="@+id/nav_manage" android:icon="@android:drawable/ic_menu_manage"
-            android:title="Tools" />
+        <item android:id="@+id/menu_hospital" android:icon="@android:drawable/ic_menu_camera"
+            android:title="@string/menu_hospital" />
+        <item android:id="@+id/menu_secretaria_saude" android:icon="@android:drawable/ic_menu_gallery"
+            android:title="@string/menu_secretaria_saude" />
+        <item android:id="@+id/menu_policlina" android:icon="@android:drawable/ic_menu_slideshow"
+            android:title="@string/menu_policlina" />
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"
-                android:title="Share" />
-            <item android:id="@+id/nav_send" android:icon="@android:drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="@string/menu_config" />
         </menu>
     </item>
 

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3E6DA4</color>
-    <color name="colorPrimaryDark">#324373</color>
-    <color name="colorAccent">#BF6734</color>
+    <color name="colorPrimaryDark">#FF44964B</color>
+    <color name="colorPrimary">#FF4CAF50</color>
+    <color name="colorAccent">#FF4CAF50</color>
+
+    <color name="mapToGoButtonBackground">#FF078903</color>
+    <color name="mapToGoButtonText">#FFFFFFFF</color>
+    <color name="mapUberButtonBackground">#FFFFAB00</color>
+    <color name="mapUberButtonText">#FF424242</color>
+    <color name="mapPolyline">#FF4396FD</color>
+    <color name="mapPolylineBorder">#FF3062D0</color>
 </resources>

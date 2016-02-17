@@ -1,8 +1,14 @@
 package com.mcardoso.doutorrj;
 
+import android.annotation.TargetApi;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -12,10 +18,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.mcardoso.doutorrj.view.CustomPageAdapter;
+import com.mcardoso.doutorrj.helper.EstablishmentHelper;
+import com.mcardoso.doutorrj.helper.LocationHelper;
+import com.mcardoso.doutorrj.model.establishment.Establishment;
+import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
+import com.mcardoso.doutorrj.view.MapFragment;
+import com.mcardoso.doutorrj.view.ListFragment;
+import com.mcardoso.doutorrj.view.NotifiableFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ListFragment.EstablishmentListCallback {
 
     private CustomPageAdapter pageAdapter;
     private ViewPager viewPager;
@@ -24,6 +37,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        LocationHelper.getInstance().setContext(this);
+
+        new EstablishmentHelper(this);
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -79,25 +97,92 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
+        EstablishmentType type = EstablishmentType.getTypeById(item.getItemId());
+        NotifiableFragment.broadcastEstablishmentTypeChange(type);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocationHelper.getInstance().onResume();
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public boolean hasPermission(String permission) {
+        return PackageManager.PERMISSION_GRANTED == this.checkSelfPermission(permission);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public void askPermission(String permission) {
+        this.requestPermissions(new String[]{permission}, 1);
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.M)
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if( hasPermission(permissions[0]) ) {
+            LocationHelper.getInstance().setup();
+        }
+    }
+
+    @Override
+    public void userSelected(Establishment establishment) {
+        Integer mapFragmentPosition = 0;
+        this.viewPager.setCurrentItem(mapFragmentPosition);
+        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(
+                "android:switcher:" + this.viewPager.getId() + ":" + this.pageAdapter.getItemId(mapFragmentPosition)
+        );
+        mapFragment.update(establishment);
+    }
+
+
+    class CustomPageAdapter extends FragmentPagerAdapter {
+
+        public CustomPageAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment fragment;
+
+            switch(position) {
+                case 1:
+                    fragment = new ListFragment();
+                    break;
+                default:
+                    fragment = new MapFragment();
+                    break;
+            }
+
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            int resourceId;
+
+            switch (position) {
+                case 1:
+                    resourceId = R.string.list_title;
+                    break;
+                default:
+                    resourceId = R.string.map_title;
+                    break;
+            }
+            return getResources().getString(resourceId);
+        }
     }
 }

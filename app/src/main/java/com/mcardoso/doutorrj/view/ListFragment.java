@@ -1,112 +1,110 @@
 package com.mcardoso.doutorrj.view;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.mashape.unirest.http.Unirest;
+import com.beardedhen.androidbootstrap.BootstrapLabel;
+import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
+import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
 import com.mcardoso.doutorrj.R;
-import com.mcardoso.doutorrj.model.Establishment;
-import com.mcardoso.doutorrj.model.EstablishmentsList;
+import com.mcardoso.doutorrj.model.establishment.Establishment;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.List;
 
 /**
  * Created by mcardoso on 12/10/15.
  */
-public class ListFragment extends Fragment {
+public class ListFragment extends NotifiableFragment {
 
     private static String TAG = "ListFragment";
-    private Bundle savedInstanceState;
-    private View view;
+    private EstablishmentListCallback callback;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        new RetrieveEstablishmentsTask().execute();
-        Log.d(TAG, "Testing3");
-        this.savedInstanceState = savedInstanceState;
-        this.view = inflater.inflate(R.layout.fragment_list, container, false);
-        return this.view;
+    protected boolean useLoadingScreen() {
+        return true;
     }
 
-    private void updateList(EstablishmentsList establishmentList) {
-        ListView listView = (ListView) this.view.findViewById(R.id.listView);
-        listView.setAdapter(new CustomListAdapter(establishmentList.getResults()));
+    @Override
+    protected Integer getTargetLayoutId() {
+        return R.layout.fragment_list;
     }
 
-    class RetrieveEstablishmentsTask extends AsyncTask<String, Void, EstablishmentsList> {
-
-        private EstablishmentsList list;
-
-        @Override
-        protected EstablishmentsList doInBackground(String... params) {
-            Log.d(TAG, "Testing");
-            String url = getResources().getString(R.string.api_all_establishments);
-            try {
-                String result = Unirest.get(url).asString().getBody();
-                this.list = new Gson().fromJson(result, EstablishmentsList.class);
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
+    @Override
+    public void draw() {
+        final ListView listView = (ListView) this.view.findViewById(R.id.listView);
+        listView.setAdapter(new CustomListAdapter(getContext(), R.layout.list_row, super.getCurrentList()));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                callback.userSelected((Establishment) parent.getItemAtPosition(position));
             }
-            Log.d(TAG, "Testing2");
-
-            return this.list;
-        }
-
-        @Override
-        protected void onPostExecute(EstablishmentsList establishmentsList) {
-            updateList(this.list);
-        }
+        });
     }
 
-    class CustomListAdapter extends BaseAdapter {
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.callback = (EstablishmentListCallback) activity;
+    }
 
+    class CustomListAdapter extends ArrayAdapter<Establishment> {
+
+        private Context context;
         private List<Establishment> establishments;
 
-        public CustomListAdapter(List<Establishment> establishments) {
-            super();
-            this.establishments = establishments;
-        }
-
-        @Override
-        public int getCount() {
-            return this.establishments.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return this.establishments.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
+        public CustomListAdapter(Context context, int resource, List<Establishment> objects) {
+            super(context, resource, objects);
+            this.context = context;
+            this.establishments = objects;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                LayoutInflater inflater = getLayoutInflater(savedInstanceState);
-                convertView = inflater.inflate(R.layout.list_row, null);
+            if ( convertView == null ) {
+                LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.list_row, parent, false);
             }
+            Establishment establishment = this.establishments.get(position);
 
-            TextView name = (TextView)convertView.findViewById(R.id.row_title);
-            TextView summary = (TextView)convertView.findViewById(R.id.row_distance);
+            String formattedName = WordUtils.capitalizeFully(establishment.getName());
+            ((TextView) convertView.findViewById(R.id.row_title)).setText(formattedName);
 
-            name.setText(this.establishments.get(position).getName());
-            summary.setText(this.establishments.get(position).getCnpj());
+            BootstrapBrand brand;
+            Integer textId;
+            if ( establishment.isPrivateEstablishment() ) {
+                textId = R.string.list_type_private;
+                brand = DefaultBootstrapBrand.PRIMARY;
+            } else {
+                textId = R.string.list_type_public;
+                brand = DefaultBootstrapBrand.SUCCESS;
+            }
+            BootstrapLabel labelView = (BootstrapLabel) convertView.findViewById(R.id.row_type);
+            labelView.setText(textId);
+            labelView.setBootstrapBrand(brand);
+
+            Float distanceInMeters = LOCATION.distanceTo(establishment.getLocation());
+            String formattedDistance;
+            if (distanceInMeters > 1000f) {
+                formattedDistance = String.format("%.2fkm", distanceInMeters/1000f);
+            } else {
+                formattedDistance = String.format("%.0fm", distanceInMeters);
+            }
+            ((TextView)convertView.findViewById(R.id.row_distance)).setText(formattedDistance);
 
             return convertView;
         }
+    }
+
+    public interface EstablishmentListCallback {
+        void userSelected(Establishment establishment);
     }
 }

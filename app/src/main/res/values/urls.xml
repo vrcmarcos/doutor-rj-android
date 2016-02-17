@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="api_establishments_per_type">http://192.168.25.199:8000/unidades.json</string>
+    <string name="maps_api_travel_info" formatted="false">https://maps.googleapis.com/maps/api/directions/json?origin=%s,%s&amp;destination=%s,%s&amp;units=metric</string>
+    <string name="maps_api_go_to" formatted="false">http://maps.google.com/maps?daddr=%s,%s</string>
+    <string name="uber_deep_linking_url" formatted="false">uber://?client_id=%s&amp;action=setPickup&amp;pickup=my_location&amp;dropoff[latitude]=%s&amp;dropoff[longitude]=%s</string>
+    <string name="uber_mobile_website" formatted="false">https://m.uber.com/sign-up?client_id=%s</string>
+</resources>
