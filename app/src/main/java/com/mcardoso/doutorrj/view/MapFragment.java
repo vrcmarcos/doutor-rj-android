@@ -37,9 +37,9 @@ import java.util.List;
 /**
  * Created by mcardoso on 12/8/15.
  */
-public class BestChoiceFragment extends NotifiableFragment {
+public class MapFragment extends NotifiableFragment {
 
-    private static String TAG = "BestChoiceFragment";
+    private static String TAG = "MapFragment";
     private static int DEFAULT_ZOOM = 12;
     private static LatLng LAT_LNG_DEFAULT_CITY = new LatLng(-22.95,-43.2);
 
@@ -59,6 +59,12 @@ public class BestChoiceFragment extends NotifiableFragment {
         this.map.setMyLocationEnabled(true);
         this.map.getUiSettings().setMapToolbarEnabled(false);
         this.map.getUiSettings().setMyLocationButtonEnabled(false);
+        this.map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                checkConditions();
+            }
+        });
 
         MapsInitializer.initialize(this.getActivity());
         this.map.animateCamera(CameraUpdateFactory.newLatLngZoom(LAT_LNG_DEFAULT_CITY, DEFAULT_ZOOM));
@@ -73,18 +79,29 @@ public class BestChoiceFragment extends NotifiableFragment {
 
     @Override
     protected Integer getTargetLayoutId() {
-        return R.layout.fragment_best_choice;
+        return R.layout.fragment_map;
+    }
+
+    private Establishment getCurrentEstablishment() {
+        return super.getCurrentList().get(0);
+    }
+
+    public void update(Establishment establishment) {
+        this.drawMap(establishment);
     }
 
     @Override
     public void draw() {
+        this.drawMap(this.getCurrentEstablishment());
+    }
+
+    private void drawMap(Establishment establishment) {
         this.map.clear();
-        Establishment bestChoice = super.getCurrentList().get(0);
-        LatLng bestChoiceLatLng = bestChoice.getLatLng();
+        LatLng establishmentLatLng = establishment.getLatLng();
         final Marker marker = this.map.addMarker(
                 new MarkerOptions()
-                        .title(bestChoice.getName())
-                        .position(bestChoiceLatLng)
+                        .title(establishment.getName())
+                        .position(establishmentLatLng)
         );
         this.map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -95,13 +112,13 @@ public class BestChoiceFragment extends NotifiableFragment {
             }
         });
 
-        Double pivotLatitude = ( 2 * bestChoice.getLatitude() ) - LAT_LNG.latitude;
-        Double pivotLongitude = ( 2 * bestChoice.getLongitude() ) - LAT_LNG.longitude;
+        Double pivotLatitude = ( 2 * establishment.getLatitude() ) - LAT_LNG.latitude;
+        Double pivotLongitude = ( 2 * establishment.getLongitude() ) - LAT_LNG.longitude;
 
         LatLngBounds bounds = new LatLngBounds.Builder()
                 .include(new LatLng(pivotLatitude, pivotLongitude))
                 .include(LAT_LNG)
-                .include(bestChoiceLatLng)
+                .include(establishmentLatLng)
                 .build();
         CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 50);
         this.map.animateCamera(camUpdate, 250, null);
@@ -112,8 +129,8 @@ public class BestChoiceFragment extends NotifiableFragment {
                 R.string.maps_api_travel_info,
                 LAT_LNG.latitude,
                 LAT_LNG.longitude,
-                bestChoiceLatLng.latitude,
-                bestChoiceLatLng.longitude
+                establishmentLatLng.latitude,
+                establishmentLatLng.longitude
         );
 
         new RequestHelper(mapsUrl, RequestHelper.Method.GET, new RequestHelper.RestRequestCallback() {
@@ -150,7 +167,7 @@ public class BestChoiceFragment extends NotifiableFragment {
 
         BootstrapButton goToButton = (BootstrapButton) this.dashboard.findViewById(R.id.button_go_to);
         goToButton.setVisibility(View.VISIBLE);
-        goToButton.setBootstrapBrand(BootstrapHelper.getGreenBrand());
+        goToButton.setBootstrapBrand(BootstrapHelper.getGoToBrand());
         goToButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,7 +178,7 @@ public class BestChoiceFragment extends NotifiableFragment {
 
         BootstrapButton requestUberButton = (BootstrapButton) this.dashboard.findViewById(R.id.button_request_uber);
         requestUberButton.setVisibility(View.VISIBLE);
-        requestUberButton.setBootstrapBrand(BootstrapHelper.getYellowBrand());
+        requestUberButton.setBootstrapBrand(BootstrapHelper.getUberBrand());
         requestUberButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,9 +218,9 @@ public class BestChoiceFragment extends NotifiableFragment {
             rectLine.add(step.getEndLocation().getLatLng());
         }
 
-        rectLine.width(30).color(this.getResources().getColor(R.color.polylineBorder));
+        rectLine.width(30).color(this.getResources().getColor(R.color.mapPolylineBorder));
         this.map.addPolyline(rectLine);
-        rectLine.width(18).color(this.getResources().getColor(R.color.polyline));
+        rectLine.width(18).color(this.getResources().getColor(R.color.mapPolyline));
         this.map.addPolyline(rectLine);
     }
 

@@ -20,13 +20,18 @@ import android.view.MenuItem;
 
 import com.mcardoso.doutorrj.helper.EstablishmentHelper;
 import com.mcardoso.doutorrj.helper.LocationHelper;
+import com.mcardoso.doutorrj.model.establishment.Establishment;
 import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
-import com.mcardoso.doutorrj.view.BestChoiceFragment;
+import com.mcardoso.doutorrj.view.MapFragment;
 import com.mcardoso.doutorrj.view.ListFragment;
 import com.mcardoso.doutorrj.view.NotifiableFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ListFragment.EstablishmentListCallback {
+
+    private CustomPageAdapter pageAdapter;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +54,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        CustomPageAdapter pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setAdapter(pageAdapter);
+        this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
+        this.viewPager = (ViewPager) findViewById(R.id.pager);
+        this.viewPager.setAdapter(this.pageAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setupWithViewPager(this.viewPager);
     }
 
     @Override
@@ -125,6 +130,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void userSelected(Establishment establishment) {
+        Integer mapFragmentPosition = 0;
+        this.viewPager.setCurrentItem(mapFragmentPosition);
+        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(
+                "android:switcher:" + this.viewPager.getId() + ":" + this.pageAdapter.getItemId(mapFragmentPosition)
+        );
+        mapFragment.update(establishment);
+    }
+
+
     class CustomPageAdapter extends FragmentPagerAdapter {
 
         public CustomPageAdapter(FragmentManager fm) {
@@ -140,7 +156,7 @@ public class MainActivity extends AppCompatActivity
                     fragment = new ListFragment();
                     break;
                 default:
-                    fragment = new BestChoiceFragment();
+                    fragment = new MapFragment();
                     break;
             }
 
@@ -152,6 +168,8 @@ public class MainActivity extends AppCompatActivity
             return 2;
         }
 
+
+
         @Override
         public CharSequence getPageTitle(int position) {
             int resourceId;
@@ -161,7 +179,7 @@ public class MainActivity extends AppCompatActivity
                     resourceId = R.string.list_title;
                     break;
                 default:
-                    resourceId = R.string.best_choice_title;
+                    resourceId = R.string.map_title;
                     break;
             }
             return getResources().getString(resourceId);

@@ -42,6 +42,10 @@ public class Establishment {
         return new LatLng(this.getLatitude(), this.getLongitude());
     }
 
+    public Boolean isPrivateEstablishment() {
+        return privateEstablishment;
+    }
+
     public Location getLocation() {
         Location location = new Location("");
         location.setLatitude(getLatitude());
