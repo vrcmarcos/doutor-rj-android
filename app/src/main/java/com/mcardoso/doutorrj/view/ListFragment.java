@@ -10,6 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapLabel;
+import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
+import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
 import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
 
@@ -75,8 +78,18 @@ public class ListFragment extends NotifiableFragment {
             String formattedName = WordUtils.capitalizeFully(establishment.getName());
             ((TextView) convertView.findViewById(R.id.row_title)).setText(formattedName);
 
-            Integer typeTextId = establishment.isPrivateEstablishment() ? R.string.list_type_private : R.string.list_type_public;
-            ((TextView) convertView.findViewById(R.id.row_type)).setText(typeTextId);
+            BootstrapBrand brand;
+            Integer textId;
+            if ( establishment.isPrivateEstablishment() ) {
+                textId = R.string.list_type_private;
+                brand = DefaultBootstrapBrand.PRIMARY;
+            } else {
+                textId = R.string.list_type_public;
+                brand = DefaultBootstrapBrand.SUCCESS;
+            }
+            BootstrapLabel labelView = (BootstrapLabel) convertView.findViewById(R.id.row_type);
+            labelView.setText(textId);
+            labelView.setBootstrapBrand(brand);
 
             Float distanceInMeters = LOCATION.distanceTo(establishment.getLocation());
             String formattedDistance;
