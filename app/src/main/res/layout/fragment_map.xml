@@ -11,6 +11,20 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
+    <com.beardedhen.androidbootstrap.BootstrapLabel
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12 min"
+        android:id="@+id/map_time"
+        app:bootstrapBrand="primary"
+        app:bootstrapHeading="h6"
+        app:roundedCorners="true"
+        android:layout_alignRight="@+id/map_view"
+        android:layout_alignBottom="@+id/map_view"
+        android:layout_marginRight="10dp"
+        android:alpha="0.9"
+        android:layout_marginBottom="5dp" />
+
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
@@ -28,15 +42,14 @@
             android:orientation="horizontal"/>
 
         <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/button_request_uber"
+            android:text="@string/map_request_uber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/map_go_to"
             app:bootstrapSize="xl"
             app:buttonMode="regular"
             app:roundedCorners="true"
             android:alpha="0.9"
-            android:id="@+id/button_go_to"
-            android:visibility="invisible"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/linearLayout"
             android:layout_alignParentLeft="true"
@@ -46,15 +59,14 @@
             android:layout_marginRight="5dp" />
 
         <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/button_go_to"
+            android:text="@string/map_go_to"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/map_request_uber"
             app:bootstrapSize="xl"
             app:buttonMode="regular"
             app:roundedCorners="true"
             android:alpha="0.9"
-            android:id="@+id/button_request_uber"
-            android:visibility="invisible"
             android:layout_below="@+id/linearLayout"
             android:layout_toRightOf="@+id/linearLayout"
             android:layout_alignParentRight="true"

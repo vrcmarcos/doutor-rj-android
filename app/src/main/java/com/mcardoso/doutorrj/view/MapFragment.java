@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.BootstrapLabel;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,9 +44,11 @@ public class MapFragment extends NotifiableFragment {
     private static int DEFAULT_ZOOM = 12;
     private static LatLng LAT_LNG_DEFAULT_CITY = new LatLng(-22.95,-43.2);
 
+    private BootstrapLabel labelTime;
+    private BootstrapButton buttonGoTo;
+    private BootstrapButton buttonUber;
     private MapView mapView;
     private GoogleMap map;
-    private RelativeLayout dashboard;
     private Gson gson;
 
     @Nullable
@@ -68,7 +71,16 @@ public class MapFragment extends NotifiableFragment {
 
         MapsInitializer.initialize(this.getActivity());
         this.map.animateCamera(CameraUpdateFactory.newLatLngZoom(LAT_LNG_DEFAULT_CITY, DEFAULT_ZOOM));
-        this.dashboard = (RelativeLayout) view.findViewById(R.id.dashboard);
+
+        RelativeLayout dashboard = (RelativeLayout) view.findViewById(R.id.dashboard);
+        this.buttonGoTo = (BootstrapButton) dashboard.findViewById(R.id.button_go_to);
+        this.buttonGoTo.setVisibility(View.INVISIBLE);
+
+        this.buttonUber = (BootstrapButton) dashboard.findViewById(R.id.button_request_uber);
+        this.buttonUber.setVisibility(View.INVISIBLE);
+
+        this.labelTime = (BootstrapLabel) view.findViewById(R.id.map_time);
+        this.labelTime.setVisibility(View.INVISIBLE);
         return view;
     }
 
@@ -147,7 +159,7 @@ public class MapFragment extends NotifiableFragment {
                     @Override
                     public void run() {
                         addLine(steps);
-//                        addTag(duration.getText());
+                        addTimeTag(duration.getText());
                     }
                 });
             }
@@ -165,10 +177,8 @@ public class MapFragment extends NotifiableFragment {
                 position.longitude
         );
 
-        BootstrapButton goToButton = (BootstrapButton) this.dashboard.findViewById(R.id.button_go_to);
-        goToButton.setVisibility(View.VISIBLE);
-        goToButton.setBootstrapBrand(BootstrapHelper.getGoToBrand());
-        goToButton.setOnClickListener(new View.OnClickListener() {
+        this.buttonGoTo.setBootstrapBrand(BootstrapHelper.getGoToBrand());
+        this.buttonGoTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(goToURL));
@@ -176,10 +186,8 @@ public class MapFragment extends NotifiableFragment {
             }
         });
 
-        BootstrapButton requestUberButton = (BootstrapButton) this.dashboard.findViewById(R.id.button_request_uber);
-        requestUberButton.setVisibility(View.VISIBLE);
-        requestUberButton.setBootstrapBrand(BootstrapHelper.getUberBrand());
-        requestUberButton.setOnClickListener(new View.OnClickListener() {
+        this.buttonUber.setBootstrapBrand(BootstrapHelper.getUberBrand());
+        this.buttonUber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -205,6 +213,9 @@ public class MapFragment extends NotifiableFragment {
                 }
             }
         });
+
+        this.buttonGoTo.setVisibility(View.VISIBLE);
+        this.buttonUber.setVisibility(View.VISIBLE);
     }
 
     private void addLine(List<Step> steps) {
@@ -222,6 +233,11 @@ public class MapFragment extends NotifiableFragment {
         this.map.addPolyline(rectLine);
         rectLine.width(18).color(this.getResources().getColor(R.color.mapPolyline));
         this.map.addPolyline(rectLine);
+    }
+
+    private void addTimeTag(String text) {
+        this.labelTime.setText(text);
+        this.labelTime.setVisibility(View.VISIBLE);
     }
 
     @Override
