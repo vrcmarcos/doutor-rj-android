@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -42,6 +44,7 @@ public class MapFragment extends NotifiableFragment {
 
     private static String TAG = "MapFragment";
     private static int DEFAULT_ZOOM = 12;
+    private static final int SCHEDULE_DELAY_IN_SECONDS = 2;
     private static LatLng LAT_LNG_DEFAULT_CITY = new LatLng(-22.95,-43.2);
 
     private BootstrapLabel labelTime;
@@ -58,19 +61,24 @@ public class MapFragment extends NotifiableFragment {
         this.gson = new Gson();
         this.mapView = (MapView) view.findViewById(R.id.map_view);
         this.mapView.onCreate(savedInstanceState);
-        this.map = this.mapView.getMap();
-        this.map.setMyLocationEnabled(true);
-        this.map.getUiSettings().setMapToolbarEnabled(false);
-        this.map.getUiSettings().setMyLocationButtonEnabled(false);
-        this.map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+        this.mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapLoaded() {
-                checkConditions();
+            public void onMapReady(GoogleMap googleMap) {
+                map = googleMap;
+                map.setMyLocationEnabled(true);
+                map.getUiSettings().setMapToolbarEnabled(false);
+                map.getUiSettings().setMyLocationButtonEnabled(false);
+                map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                    @Override
+                    public void onMapLoaded() {
+                        checkConditions();
+                    }
+                });
+
+                MapsInitializer.initialize(getActivity());
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LAT_LNG_DEFAULT_CITY, DEFAULT_ZOOM));
             }
         });
-
-        MapsInitializer.initialize(this.getActivity());
-        this.map.animateCamera(CameraUpdateFactory.newLatLngZoom(LAT_LNG_DEFAULT_CITY, DEFAULT_ZOOM));
 
         RelativeLayout dashboard = (RelativeLayout) view.findViewById(R.id.dashboard);
         this.buttonGoTo = (BootstrapButton) dashboard.findViewById(R.id.button_go_to);
@@ -104,7 +112,21 @@ public class MapFragment extends NotifiableFragment {
 
     @Override
     public void draw() {
-        this.drawMap(this.getCurrentEstablishment());
+        if (this.map == null) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            draw();
+                        }
+                    });
+                }
+            }, 1000 * SCHEDULE_DELAY_IN_SECONDS);
+        } else {
+            this.drawMap(this.getCurrentEstablishment());
+        }
     }
 
     private void drawMap(Establishment establishment) {
