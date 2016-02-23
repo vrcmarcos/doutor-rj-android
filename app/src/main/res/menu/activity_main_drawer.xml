@@ -2,19 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/menu_hospital" android:icon="@android:drawable/ic_menu_camera"
+        <item android:id="@+id/menu_hospital" android:icon="@drawable/hospital"
             android:title="@string/menu_hospital" />
-        <item android:id="@+id/menu_secretaria_saude" android:icon="@android:drawable/ic_menu_gallery"
+        <item android:id="@+id/menu_secretaria_saude" android:icon="@drawable/building"
             android:title="@string/menu_secretaria_saude" />
-        <item android:id="@+id/menu_policlina" android:icon="@android:drawable/ic_menu_slideshow"
+        <item android:id="@+id/menu_policlina" android:icon="@drawable/stethoscope"
             android:title="@string/menu_policlina" />
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"
-                android:title="@string/menu_config" />
-        </menu>
-    </item>
 
 </menu>
