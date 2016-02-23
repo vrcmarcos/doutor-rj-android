@@ -25,6 +25,7 @@ import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
 import com.mcardoso.doutorrj.view.MapFragment;
 import com.mcardoso.doutorrj.view.ListFragment;
 import com.mcardoso.doutorrj.view.NotifiableFragment;
+import com.newrelic.agent.android.NewRelic;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -36,6 +37,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        NewRelic.withApplicationToken(
+                "AAf4e457dc725b55796e71d0bbd20869562d6358e1"
+        ).start(this.getApplication());
+
         setContentView(R.layout.activity_main);
 
         LocationHelper.getInstance().setContext(this);
