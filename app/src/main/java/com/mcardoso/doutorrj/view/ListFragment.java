@@ -17,8 +17,6 @@ import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.helper.BootstrapHelper;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
 
-import org.apache.commons.lang3.text.WordUtils;
-
 import java.util.List;
 
 /**
@@ -76,8 +74,7 @@ public class ListFragment extends NotifiableFragment {
             }
             Establishment establishment = this.establishments.get(position);
 
-            String formattedName = WordUtils.capitalizeFully(establishment.getName());
-            ((TextView) convertView.findViewById(R.id.row_title)).setText(formattedName);
+            ((TextView) convertView.findViewById(R.id.row_title)).setText(establishment.getName());
 
             BootstrapBrand brand;
             Integer textId;

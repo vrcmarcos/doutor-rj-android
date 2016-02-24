@@ -30,7 +30,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:5.+"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:5.4.1"
     }
 }
 
@@ -38,7 +38,6 @@ repositories {
     mavenCentral()
 }
 
-apply plugin: 'android'
 apply plugin: 'newrelic'
 
 dependencies {
@@ -53,7 +52,7 @@ dependencies {
     compile 'com.beardedhen:androidbootstrap:2.0.1'
     compile 'com.uber.sdk:rides-android:0.1.0'
     compile 'org.apache.commons:commons-lang3:3.1'
-    compile 'com.newrelic.agent.android:android-agent:5.+'
+    compile 'com.newrelic.agent.android:android-agent:5.4.1'
 
     testCompile 'junit:junit:4.12'
 }
