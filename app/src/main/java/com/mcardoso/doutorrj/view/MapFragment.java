@@ -89,6 +89,7 @@ public class MapFragment extends NotifiableFragment {
 
         this.labelTime = (BootstrapLabel) view.findViewById(R.id.map_time);
         this.labelTime.setVisibility(View.INVISIBLE);
+        this.labelTime.setBootstrapHeading(BootstrapHelper.Heading.H7);
         return view;
     }
 
