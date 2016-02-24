@@ -10,18 +10,41 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark" android:orientation="vertical"
     android:gravity="bottom">
 
-    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@mipmap/doctor_rounded" android:id="@+id/imageView"
-        android:layout_marginBottom="15dp" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:bootstrapBrand="success"
-        app:bootstrapSize="md"
-        app:roundedCorners="true"
-        android:text="@string/app_name"
-        />
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:src="@mipmap/doctor_rounded" android:id="@+id/imageView"
+            android:layout_marginBottom="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentLeft="true" />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bootstrapBrand="success"
+            app:bootstrapSize="md"
+            app:roundedCorners="true"
+            android:text="@string/app_name"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true" />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/version_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bootstrapBrand="secondary"
+            app:bootstrapSize="md"
+            app:roundedCorners="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
+
+
 
 </LinearLayout>
