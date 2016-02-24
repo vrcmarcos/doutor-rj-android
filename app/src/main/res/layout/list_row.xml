@@ -28,7 +28,6 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/row_title"
         app:bootstrapBrand="primary"
-        app:bootstrapHeading="h6"
         app:roundedCorners="true"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
