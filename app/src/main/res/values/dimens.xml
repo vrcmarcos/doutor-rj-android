@@ -6,4 +6,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="bootstrap_h7_text_size">10.5dp</dimen>
+    <dimen name="bootstrap_h7_vert_padding">2.625dp</dimen>
+    <dimen name="bootstrap_h7_hori_padding">4.2dp</dimen>
 </resources>

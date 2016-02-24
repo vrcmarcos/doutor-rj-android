@@ -2,8 +2,11 @@ package com.mcardoso.doutorrj.helper;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;
+import android.support.annotation.DimenRes;
 
 import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
+import com.beardedhen.androidbootstrap.api.attributes.BootstrapHeading;
+import com.beardedhen.androidbootstrap.utils.DimenUtils;
 import com.mcardoso.doutorrj.R;
 
 import static com.beardedhen.androidbootstrap.utils.ColorUtils.ACTIVE_OPACITY_FACTOR_EDGE;
@@ -83,5 +86,38 @@ public class BootstrapHelper {
             return resolveColor(textColor, context);
         }
 
+    }
+
+    public enum Heading implements BootstrapHeading {
+
+        H7(
+                R.dimen.bootstrap_h7_text_size,
+                R.dimen.bootstrap_h7_vert_padding,
+                R.dimen.bootstrap_h7_hori_padding
+        );
+
+
+        private final @DimenRes int textSize;
+        private final @DimenRes int vertPadding;
+        private final @DimenRes int horiPadding;
+
+        Heading(int textSize, int vertPadding, int horiPadding) {
+            this.textSize = textSize;
+            this.vertPadding = vertPadding;
+            this.horiPadding = horiPadding;
+        }
+
+
+        @Override public float getTextSize(Context context) {
+            return DimenUtils.pixelsFromSpResource(context, textSize);
+        }
+
+        @Override public float verticalPadding(Context context) {
+            return DimenUtils.pixelsFromDpResource(context, vertPadding);
+        }
+
+        @Override public float horizontalPadding(Context context) {
+            return DimenUtils.pixelsFromDpResource(context, horiPadding);
+        }
     }
 }

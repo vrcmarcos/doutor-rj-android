@@ -44,7 +44,7 @@ public class EstablishmentHelper {
                 .registerTypeAdapter(EstablishmentType.class, new EstablishmentTypeDeserializer())
                 .create();
         NotifiableFragment.broadcastEstablishmentsPerTypeResponse(this.getCachedResponse());
-        this.update();
+//        this.update();
     }
 
     private EstablishmentsPerTypeResponse getCachedResponse() {

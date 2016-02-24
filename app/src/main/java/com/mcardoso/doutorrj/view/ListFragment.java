@@ -14,6 +14,7 @@ import com.beardedhen.androidbootstrap.BootstrapLabel;
 import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
 import com.mcardoso.doutorrj.R;
+import com.mcardoso.doutorrj.helper.BootstrapHelper;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -90,6 +91,7 @@ public class ListFragment extends NotifiableFragment {
             BootstrapLabel labelView = (BootstrapLabel) convertView.findViewById(R.id.row_type);
             labelView.setText(textId);
             labelView.setBootstrapBrand(brand);
+            labelView.setBootstrapHeading(BootstrapHelper.Heading.H7);
 
             Float distanceInMeters = LOCATION.distanceTo(establishment.getLocation());
             String formattedDistance;
