@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.facebook.appevents.AppEventsLogger;
 import com.mcardoso.doutorrj.helper.EstablishmentHelper;
 import com.mcardoso.doutorrj.helper.LocationHelper;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity
         BootstrapButton versionLabel = (BootstrapButton) headerView.findViewById(R.id.version_label);
         try {
             PackageInfo info = this.getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = "v" + info.versionName + ":" + info.versionCode;
+            String version = "v" + info.versionName;
             versionLabel.setText(version);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, e.getMessage(), e);
@@ -136,6 +137,13 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         LocationHelper.getInstance().onResume();
+        AppEventsLogger.activateApp(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppEventsLogger.deactivateApp(this);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
