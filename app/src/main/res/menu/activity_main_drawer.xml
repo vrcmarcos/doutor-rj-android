@@ -8,6 +8,24 @@
             android:title="@string/menu_secretaria_saude" />
         <item android:id="@+id/menu_policlina" android:icon="@drawable/stethoscope"
             android:title="@string/menu_policlina" />
+        <item android:id="@+id/menu_home_care" android:icon="@drawable/home"
+            android:title="@string/menu_home_care" />
+        <item android:id="@+id/menu_unidade_movel" android:icon="@drawable/ambulance"
+            android:title="@string/menu_unidade_movel" />
+        <item android:id="@+id/menu_central_orgaos" android:icon="@drawable/heart"
+            android:title="@string/menu_central_orgaos" />
+        <item android:id="@+id/menu_posto_saude" android:icon="@drawable/flag"
+            android:title="@string/menu_posto_saude" />
+        <item android:id="@+id/menu_laboratorio" android:icon="@drawable/microscope"
+            android:title="@string/menu_laboratorio" />
+        <item android:id="@+id/menu_parto" android:icon="@drawable/baby"
+            android:title="@string/menu_parto" />
+        <item android:id="@+id/menu_telesaude" android:icon="@drawable/telephone"
+            android:title="@string/menu_telesaude" />
+        <item android:id="@+id/menu_hemoterapia" android:icon="@drawable/blood"
+            android:title="@string/menu_hemoterapia" />
+        <item android:id="@+id/menu_psicosocial" android:icon="@drawable/brain"
+            android:title="@string/menu_psicosocial" />
     </group>
 
 </menu>

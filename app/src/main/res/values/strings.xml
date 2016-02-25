@@ -30,5 +30,13 @@
     <string name="menu_hospital">Hospital Geral</string>
     <string name="menu_secretaria_saude">Secretaria de Saúde</string>
     <string name="menu_policlina">Policlínica</string>
-    <string name="menu_config">Configurações</string>
+    <string name="menu_unidade_movel">Unidade Móvel</string>
+    <string name="menu_home_care">Home Care</string>
+    <string name="menu_central_orgaos">Central de Órgãos</string>
+    <string name="menu_posto_saude">Posto de Saúde</string>
+    <string name="menu_laboratorio">Laboratório</string>
+    <string name="menu_parto">Casa de Parto</string>
+    <string name="menu_telesaude">Telesaúde</string>
+    <string name="menu_hemoterapia">Hemoterapia</string>
+    <string name="menu_psicosocial">Centro Psicosocial</string>
 </resources>
