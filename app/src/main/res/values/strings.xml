@@ -21,6 +21,11 @@
     <string name="gps_off_dialog_text">Para usar o aplicativo, você deve ligar o GPS.</string>
     <string name="gps_off_dialog_positive_button">Ligar o GPS</string>
 
+    <!-- Permission Group -->
+    <string name="permission_group_location_label">Localização necessária</string>
+    <string name="permission_group_location_description">Para usar o Doutor Rio, é necessário que você conceda permissões para acessarmos o GPS do seu celular.</string>
+
+
     <!-- Location Not Defined Dialog -->
     <string name="location_not_defined_dialog_title">Não foi possível capturar sua posição.</string>
     <string name="location_not_defined_dialog_text">Não conseguimos descobrir sua posição atual.</string>
