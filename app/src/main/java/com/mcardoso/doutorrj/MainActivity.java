@@ -45,36 +45,38 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        NewRelic.withApplicationToken(
-                "AAf4e457dc725b55796e71d0bbd20869562d6358e1"
-        ).start(this.getApplication());
+        if ( savedInstanceState == null ) {
+            NewRelic.withApplicationToken(
+                    "AAf4e457dc725b55796e71d0bbd20869562d6358e1"
+            ).start(this.getApplication());
 
-        setContentView(R.layout.activity_main);
+            setContentView(R.layout.activity_main);
 
-        LocationHelper.getInstance().setContext(this);
+            LocationHelper.getInstance().setContext(this);
 
-        new EstablishmentHelper(this);
+            new EstablishmentHelper(this);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
 
-        this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
-        this.viewPager = (ViewPager) findViewById(R.id.pager);
-        this.viewPager.setAdapter(this.pageAdapter);
+            this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
+            this.viewPager = (ViewPager) findViewById(R.id.pager);
+            this.viewPager.setAdapter(this.pageAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(this.viewPager);
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+            tabLayout.setupWithViewPager(this.viewPager);
 
-        this.updateNavigationHeaderContent();
+            this.updateNavigationHeaderContent();
+        }
     }
 
     private void updateNavigationHeaderContent() {
