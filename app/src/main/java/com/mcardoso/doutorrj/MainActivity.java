@@ -1,6 +1,7 @@
 package com.mcardoso.doutorrj;
 
 import android.annotation.TargetApi;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,21 +16,26 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.mcardoso.doutorrj.helper.EstablishmentHelper;
 import com.mcardoso.doutorrj.helper.LocationHelper;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
 import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
-import com.mcardoso.doutorrj.view.MapFragment;
 import com.mcardoso.doutorrj.view.ListFragment;
+import com.mcardoso.doutorrj.view.MapFragment;
 import com.mcardoso.doutorrj.view.NotifiableFragment;
 import com.newrelic.agent.android.NewRelic;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ListFragment.EstablishmentListCallback {
+
+    private static String TAG = "MainActivity";
 
     private CustomPageAdapter pageAdapter;
     private ViewPager viewPager;
@@ -66,6 +72,21 @@ public class MainActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(this.viewPager);
+
+        this.updateNavigationHeaderContent();
+    }
+
+    private void updateNavigationHeaderContent() {
+        View headerView = ((NavigationView) this.findViewById(R.id.nav_view)).getHeaderView(0);
+        BootstrapButton versionLabel = (BootstrapButton) headerView.findViewById(R.id.version_label);
+        try {
+            PackageInfo info = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = "v" + info.versionName + ":" + info.versionCode;
+            versionLabel.setText(version);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, e.getMessage(), e);
+            versionLabel.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

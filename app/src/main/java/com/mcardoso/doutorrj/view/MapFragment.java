@@ -158,7 +158,7 @@ public class MapFragment extends NotifiableFragment {
         CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 50);
         this.map.animateCamera(camUpdate, 250, null);
         marker.showInfoWindow();
-        this.updateDashboard(marker.getPosition());
+        this.updateDashboard(establishment.getName(), marker.getPosition());
 
         String mapsUrl = getString(
                 R.string.maps_api_travel_info,
@@ -193,7 +193,7 @@ public class MapFragment extends NotifiableFragment {
         }).execute();
     }
 
-    private void updateDashboard(final LatLng position) {
+    private void updateDashboard(final String establishmentName, final LatLng position) {
 
         final String goToURL = getString(R.string.maps_api_go_to,
                 position.latitude,
@@ -220,7 +220,8 @@ public class MapFragment extends NotifiableFragment {
                             R.string.uber_deep_linking_url,
                             R.string.uber_client_id,
                             position.latitude,
-                            position.longitude
+                            position.longitude,
+                            establishmentName
                     );
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse(uri));
