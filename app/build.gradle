@@ -8,8 +8,8 @@ android {
         applicationId "com.mcardoso.doutorrj"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 5
-        versionName "1.0"
+        versionCode 7
+        versionName "1.2.0"
         multiDexEnabled true
     }
     buildTypes {
@@ -36,6 +36,9 @@ buildscript {
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://jitpack.io"
+    }
 }
 
 apply plugin: 'newrelic'
@@ -53,6 +56,8 @@ dependencies {
     compile 'com.uber.sdk:rides-android:0.1.0'
     compile 'org.apache.commons:commons-lang3:3.1'
     compile 'com.newrelic.agent.android:android-agent:5.4.1'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.github.quentin7b:android-location-tracker:3.2'
 
     testCompile 'junit:junit:4.12'
 }

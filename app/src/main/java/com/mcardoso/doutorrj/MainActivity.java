@@ -1,9 +1,7 @@
 package com.mcardoso.doutorrj;
 
-import android.annotation.TargetApi;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -22,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.facebook.appevents.AppEventsLogger;
 import com.mcardoso.doutorrj.helper.EstablishmentHelper;
 import com.mcardoso.doutorrj.helper.LocationHelper;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
@@ -39,41 +38,44 @@ public class MainActivity extends AppCompatActivity
 
     private CustomPageAdapter pageAdapter;
     private ViewPager viewPager;
+    private EstablishmentHelper establishmentHelper;
+    private LocationHelper locationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        NewRelic.withApplicationToken(
-                "AAf4e457dc725b55796e71d0bbd20869562d6358e1"
-        ).start(this.getApplication());
+        if ( savedInstanceState == null ) {
+            NewRelic.withApplicationToken(
+                    "AAf4e457dc725b55796e71d0bbd20869562d6358e1"
+            ).start(this.getApplication());
 
-        setContentView(R.layout.activity_main);
+            setContentView(R.layout.activity_main);
 
-        LocationHelper.getInstance().setContext(this);
+            this.establishmentHelper = new EstablishmentHelper(this);
+            this.locationHelper = new LocationHelper(this);
 
-        new EstablishmentHelper(this);
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+            this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
+            this.viewPager = (ViewPager) findViewById(R.id.pager);
+            this.viewPager.setAdapter(this.pageAdapter);
 
-        this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
-        this.viewPager = (ViewPager) findViewById(R.id.pager);
-        this.viewPager.setAdapter(this.pageAdapter);
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+            tabLayout.setupWithViewPager(this.viewPager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(this.viewPager);
-
-        this.updateNavigationHeaderContent();
+            this.updateNavigationHeaderContent();
+        }
     }
 
     private void updateNavigationHeaderContent() {
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         BootstrapButton versionLabel = (BootstrapButton) headerView.findViewById(R.id.version_label);
         try {
             PackageInfo info = this.getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = "v" + info.versionName + ":" + info.versionCode;
+            String version = "v" + info.versionName;
             versionLabel.setText(version);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, e.getMessage(), e);
@@ -135,26 +137,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        LocationHelper.getInstance().onResume();
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    public boolean hasPermission(String permission) {
-        return PackageManager.PERMISSION_GRANTED == this.checkSelfPermission(permission);
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    public void askPermission(String permission) {
-        this.requestPermissions(new String[]{permission}, 1);
+        this.locationHelper.onResume();
+        AppEventsLogger.activateApp(this);
     }
 
     @Override
-    @TargetApi(Build.VERSION_CODES.M)
+    protected void onPause() {
+        super.onPause();
+        this.locationHelper.onPause();
+        AppEventsLogger.deactivateApp(this);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if( hasPermission(permissions[0]) ) {
-            LocationHelper.getInstance().setup();
-        }
+        this.locationHelper.start();
     }
 
     @Override

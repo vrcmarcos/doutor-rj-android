@@ -5,4 +5,5 @@
     <string name="shared_preferences_key">7eZgezx8nANh2a3nB6sa5Duf</string>
     <string name="shared_preferences_establishments">4tKHgfdBQHbNhz8YLPAyLWL4</string>
     <string name="uber_client_id">cziQGEsvHyW64FO7yV1YxbY7bTa3hMou</string>
+    <string name="facebook_app_id">911887095542162</string>
 </resources>
