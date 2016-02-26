@@ -11,10 +11,10 @@ import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mcardoso.doutorrj.R;
+import com.mcardoso.doutorrj.helper.EstablishmentHelper;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
 import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
 import com.mcardoso.doutorrj.response.EstablishmentsPerTypeResponse;
-import com.mcardoso.doutorrj.helper.EstablishmentHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +28,7 @@ public abstract class NotifiableFragment extends Fragment {
 
     protected View view;
     protected Bundle savedInstanceState;
+    protected RelativeLayout loadingLayout;
 
     protected static EstablishmentsPerTypeResponse ESTABLISHMENTS_PER_TYPE_RESPONSE;
     protected static Location LOCATION;
@@ -39,15 +40,15 @@ public abstract class NotifiableFragment extends Fragment {
 
     public abstract void draw();
 
-    protected abstract boolean useLoadingScreen();
     protected abstract Integer getTargetLayoutId();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         NOTIFIABLE_FRAGMENTS.add(this);
-        int layoutId = this.useLoadingScreen() ? R.layout.fragment_load : this.getTargetLayoutId();
+        int layoutId = this.getTargetLayoutId();
         this.view = inflater.inflate(layoutId, container, false);
+        this.loadingLayout = (RelativeLayout) this.view.findViewById(R.id.fragment_load);
         this.savedInstanceState = savedInstanceState;
         return this.view;
     }
@@ -86,7 +87,6 @@ public abstract class NotifiableFragment extends Fragment {
             }
 
             for (NotifiableFragment frag : NOTIFIABLE_FRAGMENTS) {
-                frag.changeLayout();
                 frag.draw();
             }
         }
@@ -104,11 +104,7 @@ public abstract class NotifiableFragment extends Fragment {
         return CURRENT_LIST;
     }
 
-    protected void changeLayout() {
-        if ( this.useLoadingScreen() ) {
-            RelativeLayout layout = (RelativeLayout) this.view.findViewById(R.id.fragment_load);
-            layout.removeAllViews();
-            layout.addView(View.inflate(this.view.getContext(), this.getTargetLayoutId(), null));
-        }
+    protected void removeLoadingScreen() {
+        this.loadingLayout.setVisibility(View.INVISIBLE);
     }
 }

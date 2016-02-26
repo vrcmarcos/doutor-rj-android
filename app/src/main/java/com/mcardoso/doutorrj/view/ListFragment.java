@@ -28,11 +28,6 @@ public class ListFragment extends NotifiableFragment {
     private EstablishmentListCallback callback;
 
     @Override
-    protected boolean useLoadingScreen() {
-        return true;
-    }
-
-    @Override
     protected Integer getTargetLayoutId() {
         return R.layout.fragment_list;
     }
@@ -47,6 +42,7 @@ public class ListFragment extends NotifiableFragment {
                 callback.userSelected((Establishment) parent.getItemAtPosition(position));
             }
         });
+        super.removeLoadingScreen();
     }
 
     @Override

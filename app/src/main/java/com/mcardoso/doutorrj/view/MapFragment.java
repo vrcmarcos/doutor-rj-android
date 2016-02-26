@@ -20,6 +20,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -94,11 +96,6 @@ public class MapFragment extends NotifiableFragment {
     }
 
     @Override
-    protected boolean useLoadingScreen() {
-        return false;
-    }
-
-    @Override
     protected Integer getTargetLayoutId() {
         return R.layout.fragment_map;
     }
@@ -159,6 +156,7 @@ public class MapFragment extends NotifiableFragment {
         this.map.animateCamera(camUpdate, 250, null);
         marker.showInfoWindow();
         this.updateDashboard(establishment.getName(), marker.getPosition());
+        super.removeLoadingScreen();
 
         String mapsUrl = getString(
                 R.string.maps_api_travel_info,

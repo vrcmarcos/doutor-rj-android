@@ -76,4 +76,6 @@
 
     </RelativeLayout>
 
+    <include layout="@layout/fragment_load" />
+
 </RelativeLayout>
