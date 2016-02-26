@@ -30,6 +30,7 @@ public abstract class NotifiableFragment extends Fragment {
     protected Bundle savedInstanceState;
     protected RelativeLayout loadingLayout;
 
+    protected static final int SCHEDULE_DELAY_IN_SECONDS = 2;
     protected static EstablishmentsPerTypeResponse ESTABLISHMENTS_PER_TYPE_RESPONSE;
     protected static Location LOCATION;
     protected static LatLng LAT_LNG;

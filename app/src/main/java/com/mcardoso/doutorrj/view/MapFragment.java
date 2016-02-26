@@ -20,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -44,7 +45,6 @@ public class MapFragment extends NotifiableFragment {
 
     private static String TAG = "MapFragment";
     private static int DEFAULT_ZOOM = 12;
-    private static final int SCHEDULE_DELAY_IN_SECONDS = 2;
     private static LatLng LAT_LNG_DEFAULT_CITY = new LatLng(-22.95,-43.2);
 
     private BootstrapLabel labelTime;
@@ -113,7 +113,9 @@ public class MapFragment extends NotifiableFragment {
 
     @Override
     public void draw() {
-        if (this.map == null) {
+        if (super.isAdded() && this.map != null) {
+            this.drawMap(this.getCurrentEstablishment());
+        } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -125,8 +127,6 @@ public class MapFragment extends NotifiableFragment {
                     });
                 }
             }, 1000 * SCHEDULE_DELAY_IN_SECONDS);
-        } else {
-            this.drawMap(this.getCurrentEstablishment());
         }
     }
 
