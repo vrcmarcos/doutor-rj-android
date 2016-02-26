@@ -11,4 +11,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <include layout="@layout/fragment_load" />
+
 </RelativeLayout>

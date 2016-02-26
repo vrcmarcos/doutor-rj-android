@@ -2,6 +2,7 @@ package com.mcardoso.doutorrj.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,17 +29,30 @@ public class ListFragment extends NotifiableFragment {
     private EstablishmentListCallback callback;
 
     @Override
-    protected boolean useLoadingScreen() {
-        return true;
-    }
-
-    @Override
     protected Integer getTargetLayoutId() {
         return R.layout.fragment_list;
     }
 
     @Override
     public void draw() {
+        if (super.isAdded()) {
+            this.drawList();
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            draw();
+                        }
+                    });
+                }
+            }, 1000 * SCHEDULE_DELAY_IN_SECONDS);
+        }
+    }
+
+    private void drawList() {
         final ListView listView = (ListView) this.view.findViewById(R.id.listView);
         listView.setAdapter(new CustomListAdapter(getContext(), R.layout.list_row, super.getCurrentList()));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -47,6 +61,7 @@ public class ListFragment extends NotifiableFragment {
                 callback.userSelected((Establishment) parent.getItemAtPosition(position));
             }
         });
+        super.removeLoadingScreen();
     }
 
     @Override

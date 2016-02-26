@@ -20,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -44,15 +45,16 @@ public class MapFragment extends NotifiableFragment {
 
     private static String TAG = "MapFragment";
     private static int DEFAULT_ZOOM = 12;
-    private static final int SCHEDULE_DELAY_IN_SECONDS = 2;
     private static LatLng LAT_LNG_DEFAULT_CITY = new LatLng(-22.95,-43.2);
 
     private BootstrapLabel labelTime;
+    private BootstrapButton buttonCentralize;
     private BootstrapButton buttonGoTo;
     private BootstrapButton buttonUber;
     private MapView mapView;
     private GoogleMap map;
     private Gson gson;
+    private CameraUpdate camUpdate;
 
     @Nullable
     @Override
@@ -87,15 +89,13 @@ public class MapFragment extends NotifiableFragment {
         this.buttonUber = (BootstrapButton) dashboard.findViewById(R.id.button_request_uber);
         this.buttonUber.setVisibility(View.INVISIBLE);
 
-        this.labelTime = (BootstrapLabel) view.findViewById(R.id.map_time);
+        this.labelTime = (BootstrapLabel) dashboard.findViewById(R.id.label_time);
         this.labelTime.setVisibility(View.INVISIBLE);
         this.labelTime.setBootstrapHeading(BootstrapHelper.Heading.H7);
-        return view;
-    }
 
-    @Override
-    protected boolean useLoadingScreen() {
-        return false;
+        this.buttonCentralize = (BootstrapButton) dashboard.findViewById(R.id.label_centralize);
+        this.buttonCentralize.setVisibility(View.INVISIBLE);
+        return view;
     }
 
     @Override
@@ -113,7 +113,9 @@ public class MapFragment extends NotifiableFragment {
 
     @Override
     public void draw() {
-        if (this.map == null) {
+        if (super.isAdded() && this.map != null) {
+            this.drawMap(this.getCurrentEstablishment());
+        } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -125,8 +127,6 @@ public class MapFragment extends NotifiableFragment {
                     });
                 }
             }, 1000 * SCHEDULE_DELAY_IN_SECONDS);
-        } else {
-            this.drawMap(this.getCurrentEstablishment());
         }
     }
 
@@ -155,10 +155,11 @@ public class MapFragment extends NotifiableFragment {
                 .include(LAT_LNG)
                 .include(establishmentLatLng)
                 .build();
-        CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 50);
-        this.map.animateCamera(camUpdate, 250, null);
+        this.camUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 200);
+        this.map.animateCamera(this.camUpdate, 250, null);
         marker.showInfoWindow();
         this.updateDashboard(establishment.getName(), marker.getPosition());
+        super.removeLoadingScreen();
 
         String mapsUrl = getString(
                 R.string.maps_api_travel_info,
@@ -200,7 +201,7 @@ public class MapFragment extends NotifiableFragment {
                 position.longitude
         );
 
-        this.buttonGoTo.setBootstrapBrand(BootstrapHelper.getGoToBrand());
+        this.buttonGoTo.setBootstrapBrand(BootstrapHelper.Brand.GO_TO);
         this.buttonGoTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,7 +210,7 @@ public class MapFragment extends NotifiableFragment {
             }
         });
 
-        this.buttonUber.setBootstrapBrand(BootstrapHelper.getUberBrand());
+        this.buttonUber.setBootstrapBrand(BootstrapHelper.Brand.UBER);
         this.buttonUber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -238,8 +239,20 @@ public class MapFragment extends NotifiableFragment {
             }
         });
 
+        this.buttonCentralize.setBootstrapBrand(BootstrapHelper.Brand.CENTRALIZE);
+        this.buttonCentralize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (map != null && camUpdate != null) {
+                    map.animateCamera(camUpdate, 250, null);
+                }
+            }
+        });
+
         this.buttonGoTo.setVisibility(View.VISIBLE);
         this.buttonUber.setVisibility(View.VISIBLE);
+        this.buttonCentralize.setVisibility(View.VISIBLE);
+
     }
 
     private void addLine(List<Step> steps) {

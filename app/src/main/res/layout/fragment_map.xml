@@ -11,23 +11,10 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
-    <com.beardedhen.androidbootstrap.BootstrapLabel
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="12 min"
-        android:id="@+id/map_time"
-        app:bootstrapBrand="primary"
-        app:roundedCorners="true"
-        android:layout_alignRight="@+id/map_view"
-        android:layout_alignBottom="@+id/map_view"
-        android:layout_marginRight="10dp"
-        android:alpha="0.9"
-        android:layout_marginBottom="5dp" />
-
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_alignParentBottom="true"
         android:id="@+id/dashboard"
         android:layout_centerHorizontal="true">
@@ -41,6 +28,30 @@
             android:orientation="horizontal"/>
 
         <com.beardedhen.androidbootstrap.BootstrapButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fontAwesomeIcon="fa_compass"
+            app:bootstrapBrand="regular"
+            app:bootstrapSize="xl"
+            app:buttonMode="regular"
+            app:showOutline="false"
+            app:roundedCorners="true"
+            android:id="@+id/label_centralize"
+            android:layout_margin="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true" />
+
+        <com.beardedhen.androidbootstrap.BootstrapLabel
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12 min"
+            android:id="@+id/label_time"
+            app:bootstrapBrand="primary"
+            app:roundedCorners="true"
+            android:layout_alignRight="@+id/button_go_to"
+            android:layout_above="@+id/button_go_to" />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/button_request_uber"
             android:text="@string/map_request_uber"
             android:layout_width="wrap_content"
@@ -48,14 +59,11 @@
             app:bootstrapSize="lg"
             app:buttonMode="regular"
             app:roundedCorners="true"
-            android:alpha="0.9"
-            android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/linearLayout"
+            android:layout_alignParentStart="false"
+            android:layout_margin="5dp"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="35dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp" />
+            android:layout_alignParentBottom="true" />
 
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/button_go_to"
@@ -65,15 +73,14 @@
             app:bootstrapSize="lg"
             app:buttonMode="regular"
             app:roundedCorners="true"
-            android:alpha="0.9"
-            android:layout_below="@+id/linearLayout"
             android:layout_toRightOf="@+id/linearLayout"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="35dp" />
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="5dp" />
 
     </RelativeLayout>
+
+    <include layout="@layout/fragment_load" />
 
 </RelativeLayout>
