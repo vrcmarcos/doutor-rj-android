@@ -22,29 +22,16 @@ import static com.beardedhen.androidbootstrap.utils.ColorUtils.resolveColor;
  */
 public class BootstrapHelper {
 
-    private static Brand BRAND_UBER;
-    private static Brand BRAND_GO_TO;
+    public enum Brand implements BootstrapBrand {
 
-    public static BootstrapBrand getGoToBrand() {
-        if (BRAND_GO_TO == null ) {
-            BRAND_GO_TO = new Brand(R.color.mapToGoButtonBackground, R.color.mapToGoButtonText);
-        }
-        return BRAND_GO_TO;
-    }
-
-    public static BootstrapBrand getUberBrand() {
-        if (BRAND_UBER == null ) {
-            BRAND_UBER = new Brand(R.color.mapUberButtonBackground, R.color.mapUberButtonText);
-        }
-        return BRAND_UBER;
-    }
-
-    private static class Brand implements BootstrapBrand {
+        GO_TO(R.color.mapToGoButtonBackground,  R.color.mapToGoButtonText),
+        UBER(R.color.mapUberButtonBackground,  R.color.mapUberButtonText),
+        CENTRALIZE(R.color.mapCentralizeButtonBackground,  R.color.mapCentralizeButtonText);
 
         private final int color;
         private final int textColor;
 
-        public Brand(int color, int textColor) {
+        Brand(int color, int textColor) {
             this.color = color;
             this.textColor = textColor;
         }

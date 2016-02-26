@@ -8,6 +8,8 @@
     <color name="mapToGoButtonText">#FFFFFFFF</color>
     <color name="mapUberButtonBackground">#FFFFAB00</color>
     <color name="mapUberButtonText">#FF424242</color>
+    <color name="mapCentralizeButtonBackground">#FF424242</color>
+    <color name="mapCentralizeButtonText">#FFFFFFFF</color>
     <color name="mapPolyline">#FF4396FD</color>
     <color name="mapPolylineBorder">#FF3062D0</color>
 </resources>
