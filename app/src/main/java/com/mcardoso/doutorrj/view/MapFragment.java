@@ -155,7 +155,7 @@ public class MapFragment extends NotifiableFragment {
                 .include(LAT_LNG)
                 .include(establishmentLatLng)
                 .build();
-        this.camUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+        this.camUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 200);
         this.map.animateCamera(this.camUpdate, 250, null);
         marker.showInfoWindow();
         this.updateDashboard(establishment.getName(), marker.getPosition());
