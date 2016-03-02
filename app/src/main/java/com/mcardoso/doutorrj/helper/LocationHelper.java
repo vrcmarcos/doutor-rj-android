@@ -10,7 +10,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 
 import com.mcardoso.doutorrj.MainActivity;
 import com.mcardoso.doutorrj.view.NotifiableFragment;
@@ -43,14 +42,19 @@ public class LocationHelper {
         this.start();
     }
 
-    public void start() {
-        if( !this.locationFound ) {
-            List<String> unavailablePermissions = new ArrayList<String>();
-            for (String permission : NECESSARY_PERMITIONS) {
-                if (ContextCompat.checkSelfPermission(ctx, permission) != PackageManager.PERMISSION_GRANTED) {
-                    unavailablePermissions.add(permission);
-                }
+    private List<String> getUnavailablePermissions() {
+        List<String> unavailablePermissions = new ArrayList<String>();
+        for (String permission : NECESSARY_PERMITIONS) {
+            if (ContextCompat.checkSelfPermission(ctx, permission) != PackageManager.PERMISSION_GRANTED) {
+                unavailablePermissions.add(permission);
             }
+        }
+        return unavailablePermissions;
+    }
+
+    public void start() throws SecurityException {
+        if( !this.locationFound ) {
+            List<String> unavailablePermissions = this.getUnavailablePermissions();
             if (unavailablePermissions.size() > 0) {
                 ActivityCompat.requestPermissions(
                         (MainActivity) this.ctx,

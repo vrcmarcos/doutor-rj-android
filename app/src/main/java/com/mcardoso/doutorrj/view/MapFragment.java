@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Created by mcardoso on 12/8/15.
  */
-public class MapFragment extends NotifiableFragment {
+public class MapFragment extends NotifiableFragment implements OnMapReadyCallback {
 
     private static String TAG = "MapFragment";
     private static int DEFAULT_ZOOM = 12;
@@ -62,24 +62,7 @@ public class MapFragment extends NotifiableFragment {
         this.gson = new Gson();
         this.mapView = (MapView) view.findViewById(R.id.map_view);
         this.mapView.onCreate(savedInstanceState);
-        this.mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                map = googleMap;
-                map.setMyLocationEnabled(true);
-                map.getUiSettings().setMapToolbarEnabled(false);
-                map.getUiSettings().setMyLocationButtonEnabled(false);
-                map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
-                        checkConditions();
-                    }
-                });
-
-                MapsInitializer.initialize(getActivity());
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LAT_LNG_DEFAULT_CITY, DEFAULT_ZOOM));
-            }
-        });
+        this.mapView.getMapAsync(this);
 
         RelativeLayout dashboard = (RelativeLayout) view.findViewById(R.id.dashboard);
         this.buttonGoTo = (BootstrapButton) dashboard.findViewById(R.id.button_go_to);
@@ -95,6 +78,22 @@ public class MapFragment extends NotifiableFragment {
         this.buttonCentralize = (BootstrapButton) dashboard.findViewById(R.id.button_centralize);
         this.buttonCentralize.setVisibility(View.INVISIBLE);
         return view;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.map = googleMap;
+        this.map.getUiSettings().setMapToolbarEnabled(false);
+        this.map.getUiSettings().setMyLocationButtonEnabled(false);
+        this.map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                checkConditions();
+            }
+        });
+
+        MapsInitializer.initialize(getActivity());
+        this.map.animateCamera(CameraUpdateFactory.newLatLngZoom(LAT_LNG_DEFAULT_CITY, DEFAULT_ZOOM));
     }
 
     @Override
@@ -145,6 +144,7 @@ public class MapFragment extends NotifiableFragment {
                 }
             }
         });
+        this.map.setMyLocationEnabled(true);
 
         Double pivotLatitude = ( 2 * establishment.getLatitude() ) - LAT_LNG.latitude;
         Double pivotLongitude = ( 2 * establishment.getLongitude() ) - LAT_LNG.longitude;
