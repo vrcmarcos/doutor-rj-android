@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,19 +26,19 @@ import java.util.List;
 public abstract class NotifiableFragment extends Fragment {
 
     private static List<NotifiableFragment> NOTIFIABLE_FRAGMENTS = new ArrayList<>();
-
-    protected View view;
-    protected Bundle savedInstanceState;
-    protected RelativeLayout loadingLayout;
+    private static EstablishmentType CURRENT_TYPE = EstablishmentType.getDefault();
+    private static List<Establishment> CURRENT_LIST = null;
+    private static Boolean ESTABLISHMENTS_LIST_SORTED = false;
 
     protected static final int SCHEDULE_DELAY_IN_SECONDS = 2;
     protected static EstablishmentsPerTypeResponse ESTABLISHMENTS_PER_TYPE_RESPONSE;
     protected static Location LOCATION;
     protected static LatLng LAT_LNG;
 
-    private static EstablishmentType CURRENT_TYPE = EstablishmentType.getDefault();
-    private static List<Establishment> CURRENT_LIST = null;
-    private static Boolean ESTABLISHMENTS_LIST_SORTED = false;
+    protected View view;
+    protected Bundle savedInstanceState;
+    protected RelativeLayout loadingLayout;
+    protected FragmentActivity activity;
 
     public abstract void draw();
 
@@ -51,6 +52,7 @@ public abstract class NotifiableFragment extends Fragment {
         this.view = inflater.inflate(layoutId, container, false);
         this.loadingLayout = (RelativeLayout) this.view.findViewById(R.id.fragment_load);
         this.savedInstanceState = savedInstanceState;
+        this.activity = getActivity();
         return this.view;
     }
 
