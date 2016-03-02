@@ -41,7 +41,7 @@ public class ListFragment extends NotifiableFragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    getActivity().runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             draw();

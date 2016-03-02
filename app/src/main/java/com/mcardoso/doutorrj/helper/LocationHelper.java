@@ -112,11 +112,11 @@ public class LocationHelper {
         if( this.alertDialog == null ) {
             Resources res = this.ctx.getResources();
             this.alertDialog = new AlertDialog.Builder(this.ctx)
-                    .setTitle(res.getString(R.string.gps_off_dialog_title))
+                    .setTitle(res.getString(R.string.popup_gps_off_title))
                     .setCancelable(false)
-                    .setMessage(res.getString(R.string.gps_off_dialog_text))
+                    .setMessage(res.getString(R.string.popup_gps_off_text))
                     .setPositiveButton(
-                            res.getString(R.string.gps_off_dialog_positive_button),
+                            res.getString(R.string.popup_gps_off_positive_button),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);

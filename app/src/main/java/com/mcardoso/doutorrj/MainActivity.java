@@ -17,12 +17,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.facebook.appevents.AppEventsLogger;
 import com.mcardoso.doutorrj.helper.EstablishmentHelper;
 import com.mcardoso.doutorrj.helper.LocationHelper;
+import com.mcardoso.doutorrj.helper.PopUpHelper;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
 import com.mcardoso.doutorrj.model.establishment.EstablishmentType;
 import com.mcardoso.doutorrj.view.ListFragment;
@@ -40,6 +39,7 @@ public class MainActivity extends AppCompatActivity
     private ViewPager viewPager;
     private EstablishmentHelper establishmentHelper;
     private LocationHelper locationHelper;
+    private String version;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,21 +73,6 @@ public class MainActivity extends AppCompatActivity
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
             tabLayout.setupWithViewPager(this.viewPager);
-
-            this.updateNavigationHeaderContent();
-        }
-    }
-
-    private void updateNavigationHeaderContent() {
-        View headerView = ((NavigationView) this.findViewById(R.id.nav_view)).getHeaderView(0);
-        BootstrapButton versionLabel = (BootstrapButton) headerView.findViewById(R.id.version_label);
-        try {
-            PackageInfo info = this.getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = "v" + info.versionName;
-            versionLabel.setText(version);
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, e.getMessage(), e);
-            versionLabel.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -103,24 +88,32 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            PopUpHelper.show(this, PopUpHelper.PopUpBrand.ABOUT, this.getVersion());
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private String getVersion() {
+        if (this.version == null) {
+            try {
+                PackageInfo info = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+                this.version = info.versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.e(TAG, e.getMessage(), e);
+                this.version = "1.0.0";
+            }
+        }
+
+        return this.version;
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
