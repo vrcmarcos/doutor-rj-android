@@ -28,22 +28,24 @@ public class PopUpHelper {
 
     public static void show(final Context ctx, PopUpBrand brand, final PopUpClickListener listener, Object... messageArgs) {
 
-        if( DIALOG == null ) {
-            Resources res = ctx.getResources();
-            DIALOG = new AlertDialog.Builder(ctx)
-                    .setTitle(res.getString(brand.getTitleId()))
-                    .setCancelable(false)
-                    .setMessage(res.getString(brand.getTextId(), messageArgs))
-                    .setPositiveButton(
-                            res.getString(brand.getPositiveButtonId()),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    listener.onPositiveButtonClicked();
-                                }
-                            })
-                    .create();
-            DIALOG.show();
+        if( DIALOG != null && DIALOG.isShowing() ) {
+            dismiss();
         }
+
+        Resources res = ctx.getResources();
+        DIALOG = new AlertDialog.Builder(ctx)
+                .setTitle(res.getString(brand.getTitleId()))
+                .setCancelable(false)
+                .setMessage(res.getString(brand.getTextId(), messageArgs))
+                .setPositiveButton(
+                        res.getString(brand.getPositiveButtonId()),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                listener.onPositiveButtonClicked();
+                            }
+                        })
+                .create();
+        DIALOG.show();
     }
 
     public static void dismiss() {

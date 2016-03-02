@@ -4,10 +4,11 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <!-- Best Choice Fragment -->
+    <!-- Map Fragment -->
     <string name="map_title">Mapa</string>
-    <string name="map_go_to">Traçar rota</string>
-    <string name="map_request_uber">Chamar Uber</string>
+    <string name="map_go_to" formatted="false">{fa_map_signs} Traçar rota</string>
+    <string name="map_request_uber" formatted="false">{fa_taxi} Chamar Uber</string>
+    <string name="map_centralize" formatted="false">{fa_map_marker} Centralizar</string>
 
     <!-- List Fragment -->
     <string name="list_title">Todas as opções</string>

@@ -32,19 +32,6 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true" />
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/version_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:bootstrapBrand="secondary"
-            app:bootstrapSize="md"
-            app:roundedCorners="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentRight="true" />
-
     </RelativeLayout>
-
-
 
 </LinearLayout>
