@@ -92,7 +92,7 @@ public class MapFragment extends NotifiableFragment {
         this.labelTime.setVisibility(View.INVISIBLE);
         this.labelTime.setBootstrapHeading(BootstrapHelper.Heading.H7);
 
-        this.buttonCentralize = (BootstrapButton) dashboard.findViewById(R.id.label_centralize);
+        this.buttonCentralize = (BootstrapButton) dashboard.findViewById(R.id.button_centralize);
         this.buttonCentralize.setVisibility(View.INVISIBLE);
         return view;
     }
