@@ -63,7 +63,7 @@
             android:layout_margin="5dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
-            android:height="50dp" />
+            android:height="40dp" />
 
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/button_go_to"
@@ -78,7 +78,7 @@
             android:layout_alignParentEnd="false"
             android:layout_alignParentBottom="true"
             android:layout_margin="5dp"
-            android:height="50dp" />
+            android:height="40dp" />
 
     </RelativeLayout>
 

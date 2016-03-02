@@ -2,10 +2,8 @@ package com.mcardoso.doutorrj.helper;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.location.Location;
 import android.os.Handler;
 import android.provider.Settings;
@@ -15,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
 import com.mcardoso.doutorrj.MainActivity;
-import com.mcardoso.doutorrj.R;
 import com.mcardoso.doutorrj.view.NotifiableFragment;
 
 import java.util.ArrayList;
@@ -39,7 +36,6 @@ public class LocationHelper {
     private Context ctx;
     private LocationTracker tracker;
     private Boolean locationFound;
-    private AlertDialog alertDialog;
 
     public LocationHelper(Context ctx) {
         this.ctx = ctx;
@@ -109,24 +105,13 @@ public class LocationHelper {
     }
 
     private void showGPSOffDialog() {
-        if( this.alertDialog == null ) {
-            Resources res = this.ctx.getResources();
-            this.alertDialog = new AlertDialog.Builder(this.ctx)
-                    .setTitle(res.getString(R.string.popup_gps_off_title))
-                    .setCancelable(false)
-                    .setMessage(res.getString(R.string.popup_gps_off_text))
-                    .setPositiveButton(
-                            res.getString(R.string.popup_gps_off_positive_button),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                    ctx.startActivity(intent);
-                                    alertDialog = null;
-                                }
-                            })
-                    .create();
-            this.alertDialog.show();
-        }
+        PopUpHelper.show(this.ctx, PopUpHelper.PopUpBrand.GPS_OFF, new PopUpHelper.PopUpClickListener() {
+            @Override
+            public void onPositiveButtonClicked() {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                ctx.startActivity(intent);
+            }
+        });
     }
 
     public void onResume() {
