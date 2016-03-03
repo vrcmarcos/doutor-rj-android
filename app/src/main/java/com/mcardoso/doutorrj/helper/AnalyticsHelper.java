@@ -1,52 +1,39 @@
 package com.mcardoso.doutorrj.helper;
 
+import android.content.Context;
+
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.mcardoso.doutorrj.R;
+
 /**
  * Created by mcardoso on 3/2/16.
  */
 public class AnalyticsHelper {
 
-    private static final String PROPERTY_ID = "UA-35950922-4";
+    private static Tracker TRACKER;
 
-    public static int GENERAL_TRACKER = 0;
-
-    public static HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
-
-    public static synchronized Tracker getTracker(TrackerName trackerId, Activity context) {
-        if (!mTrackers.containsKey(trackerId)) {
-            GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
-            Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(PROPERTY_ID) : (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(R.string.ga_trackingId) : analytics.newTracker(R.string.ga_trackingId);
-            mTrackers.put(trackerId, t);
-
-        }
-        return mTrackers.get(trackerId);
+    public static void trackScreen(Context ctx, String screenName) {
+        Tracker tracker = getTracker(ctx);
+        tracker.setScreenName(screenName);
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
-    public static void sendScreen(String screenName, Activity activity) {
-        ConnectivityHelper helper = new ConnectivityHelper(activity);
-        //gnt.globo.com.receitas.utils.StringHelper stringHelper = new gnt.globo.com.receitas.utils.StringHelper();
-
-        if (helper.isConnected()) {
-            Tracker t = getTracker(TrackerName.APP_TRACKER, activity);
-            screenName = StringHelper.toSlug(screenName);
-            t.setScreenName(screenName);
-            t.send(new HitBuilders.AppViewBuilder().build());
-
-        }
+    public static void trackAction(Context ctx, String actionName) {
+        Tracker tracker = getTracker(ctx);
+        tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Action")
+                .setAction(actionName)
+                .build());
     }
 
-    public static void sendEvent(String category, String action, String label, Activity activity) {
-        ConnectivityHelper helper = new ConnectivityHelper(activity);
-        if (helper.isConnected()) {
-            // Get tracker.
-            Tracker t = getTracker(TrackerName.APP_TRACKER, activity);
-            // Build and send an Event.
-            label = StringHelper.toSlug(label);
-            Log.d("EasyTrackerHelper.sendEvent.label", label);
-            t.send(new HitBuilders.EventBuilder()
-                    .setCategory(category)
-                    .setAction(action)
-                    .setLabel(label)
-                    .build());
+    private static Tracker getTracker(Context ctx) {
+        if ( TRACKER == null ) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(ctx);
+            TRACKER = analytics.newTracker(R.xml.global_tracker);
         }
+
+        return TRACKER;
     }
 }
