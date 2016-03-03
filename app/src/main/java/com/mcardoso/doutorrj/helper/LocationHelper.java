@@ -109,7 +109,7 @@ public class LocationHelper {
     }
 
     private void showGPSOffDialog() {
-        PopUpHelper.show(this.ctx, PopUpHelper.PopUpBrand.GPS_OFF, new PopUpHelper.PopUpClickListener() {
+        PopUpHelper.show(this.ctx, PopUpHelper.PopUpBrand.GPS_OFF, false, new PopUpHelper.PopUpClickListener() {
             @Override
             public void onPositiveButtonClicked() {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
