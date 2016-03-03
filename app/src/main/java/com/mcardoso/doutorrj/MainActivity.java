@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.facebook.appevents.AppEventsLogger;
+import com.mcardoso.doutorrj.helper.AnalyticsHelper;
 import com.mcardoso.doutorrj.helper.EstablishmentHelper;
 import com.mcardoso.doutorrj.helper.LocationHelper;
 import com.mcardoso.doutorrj.helper.PopUpHelper;
@@ -70,6 +71,22 @@ public class MainActivity extends AppCompatActivity
             this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
             this.viewPager = (ViewPager) findViewById(R.id.pager);
             this.viewPager.setAdapter(this.pageAdapter);
+            this.viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    AnalyticsHelper.trackScreen(getBaseContext(), getViewPageTitle(position));
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
             tabLayout.setupWithViewPager(this.viewPager);
@@ -157,6 +174,19 @@ public class MainActivity extends AppCompatActivity
         mapFragment.update(establishment);
     }
 
+    public String getViewPageTitle(int position) {
+        int resourceId;
+
+        switch (position) {
+            case 1:
+                resourceId = R.string.list_title;
+                break;
+            default:
+                resourceId = R.string.map_title;
+                break;
+        }
+        return getResources().getString(resourceId);
+    }
 
     class CustomPageAdapter extends FragmentPagerAdapter {
 
@@ -189,17 +219,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public CharSequence getPageTitle(int position) {
-            int resourceId;
-
-            switch (position) {
-                case 1:
-                    resourceId = R.string.list_title;
-                    break;
-                default:
-                    resourceId = R.string.map_title;
-                    break;
-            }
-            return getResources().getString(resourceId);
+            return getViewPageTitle(position);
         }
     }
 }

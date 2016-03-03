@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.mcardoso.doutorrj.R;
+import com.mcardoso.doutorrj.helper.AnalyticsHelper;
 import com.mcardoso.doutorrj.helper.BootstrapHelper;
 import com.mcardoso.doutorrj.helper.RequestHelper;
 import com.mcardoso.doutorrj.model.establishment.Establishment;
@@ -128,7 +129,7 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
         }
     }
 
-    private void drawMap(Establishment establishment) {
+    private void drawMap(Establishment establishment) throws SecurityException{
         this.map.clear();
         LatLng establishmentLatLng = establishment.getLatLng();
         final Marker marker = this.map.addMarker(
@@ -204,6 +205,7 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
         this.buttonGoTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnalyticsHelper.trackAction(getContext(), "Route");
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(goToURL));
                 startActivity(intent);
             }
@@ -213,6 +215,7 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
         this.buttonUber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnalyticsHelper.trackAction(getContext(), "Uber");
                 try {
                     PackageManager pm = getContext().getPackageManager();
                     pm.getPackageInfo("com.ubercab", PackageManager.GET_ACTIVITIES);
@@ -242,6 +245,7 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
         this.buttonCentralize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnalyticsHelper.trackAction(getContext(), "Centralize");
                 if (map != null && camUpdate != null) {
                     map.animateCamera(camUpdate, 250, null);
                 }
