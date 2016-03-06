@@ -10,6 +10,11 @@
     <string name="map_go_to" formatted="false">{fa_map_signs} Traçar rota</string>
     <string name="map_request_uber" formatted="false">{fa_taxi} Chamar Uber</string>
     <string name="map_centralize" formatted="false">{fa_map_marker} Centralizar</string>
+    <array name="centralize_drop_down_options">
+        <item>Mais próximo</item>
+        <item>{dropdown_separator}</item>
+        <item>Última escolha</item>
+    </array>
 
     <!-- List Fragment -->
     <string name="list_title">Todas as opções</string>

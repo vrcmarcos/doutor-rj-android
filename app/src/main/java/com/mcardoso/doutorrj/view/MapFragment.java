@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.BootstrapDropDown;
 import com.beardedhen.androidbootstrap.BootstrapLabel;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -62,6 +63,7 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
     private BootstrapButton buttonCentralize;
     private BootstrapButton buttonGoTo;
     private BootstrapButton buttonUber;
+    private BootstrapDropDown dropDownCentralize;
     private MapView mapView;
     private GoogleMap map;
     private Gson gson;
@@ -92,6 +94,9 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
 
         this.buttonCentralize = (BootstrapButton) dashboard.findViewById(R.id.button_centralize);
         this.buttonCentralize.setVisibility(View.INVISIBLE);
+
+        this.dropDownCentralize = (BootstrapDropDown) dashboard.findViewById(R.id.drop_down_centralize);
+        this.dropDownCentralize.setVisibility(View.INVISIBLE);
 
         this.markersMap = new HashMap<>();
         this.polylines = new ArrayList<>();
@@ -138,7 +143,7 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
     @Override
     public void draw() throws SecurityException {
         if (super.isAdded() && this.map != null) {
-            this.currentEstablishment = super.getCurrentList().get(0);
+            this.currentEstablishment = this.getDefaultEstablishment();
             this.map.clear();
             this.map.setMyLocationEnabled(true);
             this.map.setOnMarkerClickListener(this);
@@ -158,6 +163,10 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
                 }
             }, 1000 * SCHEDULE_DELAY_IN_SECONDS);
         }
+    }
+
+    private Establishment getDefaultEstablishment() {
+        return super.getCurrentList().get(0);
     }
 
     private void drawMap() {
@@ -203,6 +212,8 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
             public void onRequestFail() {
             }
         }).execute();
+
+        this.changeCentralizeButton();
     }
 
     private void drawMarkers() {
@@ -282,7 +293,6 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
             }
         });
 
-        this.buttonCentralize.setBootstrapBrand(BootstrapHelper.Brand.CENTRALIZE);
         this.buttonCentralize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -291,10 +301,29 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
             }
         });
 
+        this.dropDownCentralize.setOnDropDownItemClickListener(new BootstrapDropDown.OnDropDownItemClickListener() {
+            @Override
+            public void onItemClick(ViewGroup parent, View v, int id) {
+                if (id == 0) {
+                    update(getDefaultEstablishment());
+                } else {
+                    centralize();
+                }
+            }
+        });
+
         this.buttonGoTo.setVisibility(View.VISIBLE);
         this.buttonUber.setVisibility(View.VISIBLE);
-        this.buttonCentralize.setVisibility(View.VISIBLE);
+    }
 
+    private void changeCentralizeButton() {
+        if( this.currentEstablishment.equals(this.getDefaultEstablishment()) ) {
+            this.buttonCentralize.setVisibility(View.VISIBLE);
+            this.dropDownCentralize.setVisibility(View.INVISIBLE);
+        } else {
+            this.buttonCentralize.setVisibility(View.INVISIBLE);
+            this.dropDownCentralize.setVisibility(View.VISIBLE);
+        }
     }
 
     private void centralize() {
