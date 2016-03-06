@@ -2,6 +2,7 @@ package com.mcardoso.doutorrj.view;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -51,6 +54,9 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
 
     private static int DEFAULT_ZOOM = 12;
     private static LatLng LAT_LNG_DEFAULT_CITY = new LatLng(-22.95,-43.2);
+    private static float DEFAULT_MARKER_NO_FOCUS_ALPHA = 0.4f;
+    private static BitmapDescriptor MARKER_PRIMARY_COLOR;
+    private static BitmapDescriptor MARKER_SECONDARY_COLOR;
 
     private BootstrapLabel labelTime;
     private BootstrapButton buttonCentralize;
@@ -90,7 +96,16 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
         this.markersMap = new HashMap<>();
         this.polylines = new ArrayList<>();
 
+        MARKER_PRIMARY_COLOR = getHsvColor(R.color.markerPrimaryColor);
+        MARKER_SECONDARY_COLOR = getHsvColor(R.color.markerSecondaryColor);
+
         return view;
+    }
+
+    private BitmapDescriptor getHsvColor(int colorId) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(getResources().getColor(colorId), hsv);
+        return BitmapDescriptorFactory.defaultMarker(hsv[0]);
     }
 
     @Override
@@ -153,6 +168,7 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
     private void drawMarkerSpecifics() {
         Marker currentMarker = this.markersMap.get(this.currentEstablishment);
         currentMarker.showInfoWindow();
+        currentMarker.setAlpha(1.0f);
 
         String mapsUrl = getString(
                 R.string.maps_api_travel_info,
@@ -190,11 +206,15 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
     }
 
     private void drawMarkers() {
-        for (Establishment establishment : super.getCurrentList()) {
+        for (int i = 0; i < super.getCurrentList().size(); i++) {
+            Establishment establishment = super.getCurrentList().get(i);
+            BitmapDescriptor color = i == 0 ? MARKER_PRIMARY_COLOR : MARKER_SECONDARY_COLOR;
             Marker marker = this.map.addMarker(
                     new MarkerOptions()
                             .title(establishment.getName())
                             .position(establishment.getLatLng())
+                            .alpha(DEFAULT_MARKER_NO_FOCUS_ALPHA)
+                            .icon(color)
             );
             this.markersMap.put(establishment, marker);
         }
@@ -202,10 +222,14 @@ public class MapFragment extends NotifiableFragment implements OnMapReadyCallbac
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        Marker oldMarker = this.markersMap.get(this.currentEstablishment);
+        oldMarker.setAlpha(DEFAULT_MARKER_NO_FOCUS_ALPHA);
+
         Establishment result = null;
-        for (Establishment establishment : super.getCurrentList()) {
-            if( marker.getPosition().equals(establishment.getLatLng())) {
-                result = establishment;
+        for (Map.Entry<Establishment, Marker> entry : this.markersMap.entrySet())
+        {
+            if(entry.getValue().equals(marker)) {
+                result = entry.getKey();
                 break;
             }
         }
