@@ -12,4 +12,7 @@
     <color name="mapCentralizeButtonText">#FFFFFFFF</color>
     <color name="mapPolyline">#FF4396FD</color>
     <color name="mapPolylineBorder">#FF3062D0</color>
+
+    <color name="markerPrimaryColor">#FFF44336</color>
+    <color name="markerSecondaryColor">#FF3F51B5</color>
 </resources>
