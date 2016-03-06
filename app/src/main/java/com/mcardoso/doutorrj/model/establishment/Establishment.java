@@ -28,6 +28,8 @@ public class Establishment {
 
     Double longitude;
 
+    LatLng latLng;
+
     public String getName() {
         return WordUtils.capitalizeFully(name);
     }
@@ -41,7 +43,10 @@ public class Establishment {
     }
 
     public LatLng getLatLng() {
-        return new LatLng(this.getLatitude(), this.getLongitude());
+        if( this.latLng == null ) {
+            this.latLng = new LatLng(this.getLatitude(), this.getLongitude());
+        }
+        return this.latLng;
     }
 
     public Boolean isPrivateEstablishment() {

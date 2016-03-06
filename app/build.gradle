@@ -8,8 +8,8 @@ android {
         applicationId "com.mcardoso.doutorrj"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 13
-        versionName "1.6.0"
+        versionCode 14
+        versionName "1.7.0"
         multiDexEnabled true
     }
     buildTypes {
@@ -53,7 +53,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-analytics:8.4.0'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.beardedhen:androidbootstrap:2.0.1'
+    compile 'com.beardedhen:androidbootstrap:2.1.0'
     compile 'com.uber.sdk:rides-android:0.1.0'
     compile 'org.apache.commons:commons-lang3:3.1'
     compile 'com.newrelic.agent.android:android-agent:5.4.1'

@@ -31,11 +31,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:bootstrapText="@string/map_centralize"
-            app:bootstrapBrand="regular"
+            app:bootstrapBrand="primary"
             app:bootstrapSize="lg"
-            app:showOutline="true"
+            app:showOutline="false"
             app:roundedCorners="true"
             android:id="@+id/button_centralize"
+            android:layout_margin="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true" />
+
+        <com.beardedhen.androidbootstrap.BootstrapDropDown
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bootstrapText="@string/map_centralize"
+            app:bootstrapBrand="primary"
+            app:bootstrapSize="lg"
+            app:showOutline="false"
+            app:roundedCorners="true"
+            app:dropdownResource="@array/centralize_drop_down_options"
+            app:bootstrapExpandDirection="down"
+            android:id="@+id/drop_down_centralize"
             android:layout_margin="5dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true" />
