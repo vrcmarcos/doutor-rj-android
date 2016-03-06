@@ -3,6 +3,7 @@ package com.mcardoso.doutorrj;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -17,8 +18,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.facebook.appevents.AppEventsLogger;
+import com.mcardoso.doutorrj.helper.AnalyticsHelper;
 import com.mcardoso.doutorrj.helper.EstablishmentHelper;
 import com.mcardoso.doutorrj.helper.LocationHelper;
 import com.mcardoso.doutorrj.helper.PopUpHelper;
@@ -35,15 +38,19 @@ public class MainActivity extends AppCompatActivity
 
     private static String TAG = "MainActivity";
 
+    private static final int TOAST_DELAY = 2000;
+
     private CustomPageAdapter pageAdapter;
     private ViewPager viewPager;
     private EstablishmentHelper establishmentHelper;
     private LocationHelper locationHelper;
     private String version;
+    private boolean userTouchedBackButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.userTouchedBackButton = false;
 
         if ( savedInstanceState == null ) {
             NewRelic.withApplicationToken(
@@ -70,6 +77,22 @@ public class MainActivity extends AppCompatActivity
             this.pageAdapter = new CustomPageAdapter(getSupportFragmentManager());
             this.viewPager = (ViewPager) findViewById(R.id.pager);
             this.viewPager.setAdapter(this.pageAdapter);
+            this.viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    AnalyticsHelper.trackScreen(getBaseContext(), getViewPageTitle(position));
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
             tabLayout.setupWithViewPager(this.viewPager);
@@ -81,8 +104,18 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if ( !this.userTouchedBackButton ) {
+            this.userTouchedBackButton = true;
+            Toast.makeText(this, R.string.app_close_message, Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    userTouchedBackButton = false;
+                }
+            }, TOAST_DELAY);
         } else {
-            super.onBackPressed();
+            this.finishAffinity();
+            System.exit(0);
         }
     }
 
@@ -96,7 +129,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            PopUpHelper.show(this, PopUpHelper.PopUpBrand.ABOUT, this.getVersion());
+            PopUpHelper.show(this, PopUpHelper.PopUpBrand.ABOUT, true, this.getVersion());
         }
 
         return super.onOptionsItemSelected(item);
@@ -157,6 +190,19 @@ public class MainActivity extends AppCompatActivity
         mapFragment.update(establishment);
     }
 
+    public String getViewPageTitle(int position) {
+        int resourceId;
+
+        switch (position) {
+            case 1:
+                resourceId = R.string.list_title;
+                break;
+            default:
+                resourceId = R.string.map_title;
+                break;
+        }
+        return getResources().getString(resourceId);
+    }
 
     class CustomPageAdapter extends FragmentPagerAdapter {
 
@@ -189,17 +235,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public CharSequence getPageTitle(int position) {
-            int resourceId;
-
-            switch (position) {
-                case 1:
-                    resourceId = R.string.list_title;
-                    break;
-                default:
-                    resourceId = R.string.map_title;
-                    break;
-            }
-            return getResources().getString(resourceId);
+            return getViewPageTitle(position);
         }
     }
 }

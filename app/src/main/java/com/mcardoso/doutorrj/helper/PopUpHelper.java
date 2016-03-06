@@ -1,9 +1,11 @@
 package com.mcardoso.doutorrj.helper;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.support.v7.app.AlertDialog;
+import android.view.KeyEvent;
 
 import com.mcardoso.doutorrj.R;
 
@@ -17,8 +19,8 @@ public class PopUpHelper {
     private PopUpHelper() {
     }
 
-    public static void show(final Context ctx, PopUpBrand brand, Object... messageArgs) {
-        show(ctx, brand, new PopUpClickListener() {
+    public static void show(final Context ctx, PopUpBrand brand, boolean dismissable, Object... messageArgs) {
+        show(ctx, brand, dismissable, new PopUpClickListener() {
             @Override
             public void onPositiveButtonClicked() {
                 dismiss();
@@ -26,14 +28,14 @@ public class PopUpHelper {
         }, messageArgs);
     }
 
-    public static void show(final Context ctx, PopUpBrand brand, final PopUpClickListener listener, Object... messageArgs) {
+    public static void show(final Context ctx, PopUpBrand brand, boolean dismissable, final PopUpClickListener listener, Object... messageArgs) {
 
-        if( DIALOG != null && DIALOG.isShowing() ) {
+        if( isShowing() ) {
             dismiss();
         }
 
         Resources res = ctx.getResources();
-        DIALOG = new AlertDialog.Builder(ctx)
+        AlertDialog.Builder build = new AlertDialog.Builder(ctx)
                 .setTitle(res.getString(brand.getTitleId()))
                 .setCancelable(false)
                 .setMessage(res.getString(brand.getTextId(), messageArgs))
@@ -43,9 +45,26 @@ public class PopUpHelper {
                             public void onClick(DialogInterface dialog, int which) {
                                 listener.onPositiveButtonClicked();
                             }
-                        })
-                .create();
+                        });
+        if ( dismissable ) {
+            build.setOnKeyListener(new Dialog.OnKeyListener() {
+
+                @Override
+                public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dismiss();
+                    }
+                    return true;
+                }
+            });
+        }
+
+        DIALOG = build.create();
         DIALOG.show();
+    }
+
+    public static boolean isShowing() {
+        return DIALOG != null && DIALOG.isShowing();
     }
 
     public static void dismiss() {
