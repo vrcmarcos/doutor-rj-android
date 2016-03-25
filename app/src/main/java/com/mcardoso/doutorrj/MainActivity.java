@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity
 
     private CustomPageAdapter pageAdapter;
     private ViewPager viewPager;
-    private EstablishmentHelper establishmentHelper;
     private LocationHelper locationHelper;
     private String version;
     private boolean userTouchedBackButton;
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity
 
             setContentView(R.layout.activity_main);
 
-            this.establishmentHelper = new EstablishmentHelper(this);
+            new EstablishmentHelper(this);
             this.locationHelper = new LocationHelper(this);
 
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
