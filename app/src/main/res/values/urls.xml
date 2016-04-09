@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="api_establishments_per_type">http://gentle-ravine-67842.herokuapp.com/unidades.json</string>
+    <string name="api_establishments_per_type">http://gentle-ravine-67842.herokuapp.com/unidades.json?data_version=1</string>
     <string name="maps_api_travel_info" formatted="false">https://maps.googleapis.com/maps/api/directions/json?origin=%s,%s&amp;destination=%s,%s&amp;units=metric</string>
     <string name="maps_api_go_to" formatted="false">http://maps.google.com/maps?daddr=%s,%s</string>
     <string name="uber_deep_linking_url" formatted="false">uber://?client_id=%s&amp;action=setPickup&amp;pickup=my_location&amp;dropoff[latitude]=%s&amp;dropoff[longitude]=%s&amp;dropoff[nickname]=%s</string>
