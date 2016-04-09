@@ -95,9 +95,13 @@ public class EstablishmentHelper {
         new RequestHelper(url, RequestHelper.Method.GET, new RequestHelper.RestRequestCallback() {
             @Override
             public void onRequestSuccess(String json) {
-                setCachedResponse(json);
-                NotifiableFragment.updateEstablishmentsPerTypeResponse(
-                        gson.fromJson(json, EstablishmentsPerTypeResponse.class));
+                if (json.equals("{\"status\": \"updated\"}")) {
+                    Log.i(TAG, "Data already updated!");
+                } else {
+                    setCachedResponse(json);
+                    NotifiableFragment.updateEstablishmentsPerTypeResponse(
+                            gson.fromJson(json, EstablishmentsPerTypeResponse.class));
+                }
             }
 
             @Override
